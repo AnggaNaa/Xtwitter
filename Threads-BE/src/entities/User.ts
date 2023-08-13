@@ -14,8 +14,8 @@ export class User {
 
   @Column()
   email: string;
-
-  @Column({ select: false })
+  // { select: false }
+  @Column()
   password: string;
 
   @Column({ nullable: true })
@@ -24,5 +24,9 @@ export class User {
   @Column({ nullable: true })
   profile_description: string;
 
-  @OneToMany(() => Thread, (thread) => thread.user) threads: Thread[];
+  @OneToMany(() => Thread, (thread) => thread.user, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  threads: Thread[];
 }

@@ -7,9 +7,15 @@ import { Link } from "react-router-dom";
 export function NavbarLeft() {
   return (
     <>
-      <Box ml={5} position={"fixed"} display={"flex"} flexDirection={"column"}>
+      <Box
+        ml={5}
+        position={"fixed"}
+        display={"flex"}
+        flexDirection={"column"}
+        gap={5}
+      >
         <Text color="green" fontSize="6xl" as="b">
-          Circle
+          Circleee
         </Text>
         <Link to={""}>
           <Text fontSize="2xl" mb={4}>
@@ -29,6 +35,7 @@ export function NavbarLeft() {
         <Button
           width={"300px"}
           fontSize="2xl"
+          bg={"teal"}
           colorScheme="teal"
           color={"white"}
         >

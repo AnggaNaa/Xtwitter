@@ -8,7 +8,9 @@ AppDataSource.initialize()
   .then(async () => {
     const app = express();
     const port = 5000;
+    const cors = require("cors");
 
+    app.use(cors());
     // const router = express.Router();
 
     app.use(express.json());

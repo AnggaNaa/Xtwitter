@@ -11,6 +11,7 @@ class ThreadServices {
     try {
       const threads = await this.threadRepository.find({
         relations: ["user"],
+        order: { id: "DESC" },
       });
       return res.status(200).json(threads);
     } catch (err) {
@@ -40,9 +41,13 @@ class ThreadServices {
   }
 
   async delete(req: Request, res: Response) {
-    const id = parseInt(req.params.id);
-    const deleteThread = await this.threadRepository.delete(id);
-    return res.status(200).json(deleteThread);
+    try {
+      const id = parseInt(req.params.id);
+      const deleteThread = await this.threadRepository.delete(id);
+      return res.status(200).json(deleteThread);
+    } catch (err) {
+      return res.status(500).json({ error: "Error while getting threads" });
+    }
   }
 
   async update(req: Request, res: Response) {

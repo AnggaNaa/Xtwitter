@@ -1,10 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToMany,
-  ManyToOne,
-} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { User } from "./User";
 
 @Entity({ name: "threads" })
@@ -21,6 +15,9 @@ export class Thread {
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   posted_at: Date;
 
-  @ManyToOne(() => User, (user) => user.threads) user: User;
+  @ManyToOne(() => User, (user) => user.threads, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  user: User;
 }
-// user:
