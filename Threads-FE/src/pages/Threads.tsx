@@ -29,13 +29,18 @@ export function Threads() {
   });
 
   const fetchData = async () => {
-    try {
-      const response = await API.get("/threads");
-      setThread(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    // try {
+    const response = await API.get("/threads", {
+      headers: {
+        Authorization: `Bearer ${localStorage.Authorization}`,
+      },
+    });
+    setThread(response.data);
   };
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
 
   const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setForm({

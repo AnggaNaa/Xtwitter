@@ -26,7 +26,7 @@ class AuthServices {
       }
 
       // Membuat token JWT
-      const token = jwt.sign({ id: user.id, email: user.email }, "bearer", {
+      const token = jwt.sign({ id: user.id, email: user.email }, "inirahasia", {
         expiresIn: "1h",
       });
 
@@ -34,6 +34,23 @@ class AuthServices {
     } catch (error) {
       console.error("Error:", error);
       return res.status(500).json({ error: "Terjadi kesalahan pada server" });
+    }
+  }
+
+  async check(req: Request, res: Response) {
+    try {
+      const loginSession = res.locals.loginSession;
+      const user = await this.userRepository.findOne({
+        where: {
+          id: loginSession.id,
+        },
+      });
+      return res.status(200).json({
+        user,
+        message: "Token is valid",
+      });
+    } catch (err) {
+      return res.status(500).json(err);
     }
   }
 }

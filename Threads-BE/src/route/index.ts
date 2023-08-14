@@ -6,6 +6,7 @@ import authController from "../controllers/auth-controller";
 import * as getRepository from "typeorm";
 import { User } from "../entities/User";
 import * as bcrypt from "bcrypt";
+import verifyToken from "../middlewares/auth";
 
 const router = express.Router();
 // const router2 = express.Router();
@@ -20,7 +21,7 @@ router.get("/", (req: Request, res: Response) => {
 //   });
 // });
 
-router.get("/threads", threadController.find);
+router.get("/threads", verifyToken, threadController.find);
 router.get("/threads/:id", threadController.findOne);
 router.post("/threads/create", threadController.create);
 router.delete("/threads/delete/:id", threadController.delete);
@@ -31,6 +32,8 @@ router.get("/user/:id", userController.findOne);
 router.post("/user", userController.create);
 router.delete("/user/:id", userController.delete);
 router.patch("/user/:id", userController.update);
+
+router.get("/check", verifyToken, authController.check);
 
 router.post("/login", authController.findOne);
 

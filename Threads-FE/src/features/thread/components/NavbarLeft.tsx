@@ -14,8 +14,8 @@ export function NavbarLeft() {
         flexDirection={"column"}
         gap={5}
       >
-        <Text color="green" fontSize="6xl" as="b">
-          Circleee
+        <Text color="whatsapp.600" fontSize="6xl" as="b">
+          Xtwitter
         </Text>
         <Link to={""}>
           <Text fontSize="2xl" mb={4}>

@@ -1,7 +1,3 @@
-"use client";
-
-import { User } from "@/features/thread";
-import { API } from "@/lib/api";
 import {
   Flex,
   Box,
@@ -19,78 +15,17 @@ import {
   AlertTitle,
   AlertDescription,
 } from "@chakra-ui/react";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-
-interface ILogin {
-  email: string;
-  password: string;
-}
+import { useLogin } from "@/features/auth/hooks/useLogin";
 
 export default function Login() {
-  const [errorAlert, setErrorAlert] = useState("");
-  const [successAlert, setSuccessAlert] = useState("");
-
-  const [_, setUser] = useState<User[]>([]);
-  const [form, setForm] = useState<ILogin>({
-    email: "",
-    password: "",
-  });
-
-  const fetchData = async () => {
-    try {
-      const response = await API.get("/user");
-      setUser(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-    try {
-      const response = await API.post("/login", {
-        email: form.email,
-        password: form.password,
-      });
-      // Lakukan sesuatu setelah berhasil login, misalnya redirect atau menyimpan token
-      console.log(response.data, "ini post");
-
-      setForm({
-        email: "",
-        password: "",
-      });
-      setSuccessAlert("Registrasi berhasil!");
-      setErrorAlert("");
-
-      // toast({
-      //   title: "Registrasi Berhasil",
-      // });
-      // fetchData();
-    } catch (err: any) {
-      if (err.response && err.response.data) {
-        setErrorAlert(err.response.data.error);
-      } else {
-        setErrorAlert("Terjadi kesalahan pada server");
-      }
-
-      console.log(err);
-      // toast({
-      //   title: "Email already exists",
-      //   status: "error",
-      // });
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const {
+    handleSubmit,
+    changeHandler,
+    navigate,
+    errorAlert,
+    successAlert,
+    form,
+  } = useLogin();
 
   return (
     <Flex
@@ -157,6 +92,17 @@ export default function Login() {
                   <Checkbox>Remember me</Checkbox>
                   <Text color={"blue.400"}>Forgot password?</Text>
                 </Stack>
+                <Box display={"flex"}>
+                  Dont have an account yet ?{" "}
+                  <Text
+                    color={"twitter.600"}
+                    cursor={"pointer"}
+                    ml={2}
+                    onClick={() => navigate("/registrasi")}
+                  >
+                    Create One
+                  </Text>
+                </Box>
                 <Button
                   type="submit"
                   bg={"blue.400"}

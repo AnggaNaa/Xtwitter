@@ -6,6 +6,10 @@ class LoginController {
   findOne(req: Request, res: Response) {
     tes.findOne(req, res);
   }
+
+  check(req: Request, res: Response) {
+    tes.check(req, res);
+  }
 }
 
 export default new LoginController();

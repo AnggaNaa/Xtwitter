@@ -11,7 +11,7 @@ export interface User {
   email?: string;
   profile_picture?: string;
   profile_description?: string | null;
-  password: string;
+  password?: string;
 }
 
 export interface ThreadCard {
@@ -75,10 +75,17 @@ export function ThreadCard(props: ThreadCard) {
                 as={AiFillLike}
               ></Icon>
               <Text color="white"> {likesCount} Like </Text>
-              <Button size={"sm"} ml={2} color="white" colorScheme="blackAlpha">
-                <Icon as={ChatIcon} mr={2} color={"white"} />
-                {props.replies_count} Replies
-              </Button>
+              <Link to={"detail/" + props.id}>
+                <Button
+                  size={"sm"}
+                  ml={2}
+                  color="white"
+                  colorScheme="blackAlpha"
+                >
+                  <Icon as={ChatIcon} mr={2} color={"white"} />
+                  {props.replies_count} Replies
+                </Button>
+              </Link>
             </Box>
           </Box>
         </Box>
