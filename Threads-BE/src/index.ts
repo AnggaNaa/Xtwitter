@@ -1,8 +1,12 @@
+// import "dotenv/config"; // Impor dan gunakan dotenv
 import { AppDataSource } from "./data-source";
 import { Thread } from "./entities/Thread";
 import * as express from "express";
 import { Request, Response } from "express";
 import router from "./route";
+// require("dotenv").config();
+
+// dotenv.config();
 
 AppDataSource.initialize()
   .then(async () => {

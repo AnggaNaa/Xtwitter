@@ -41,6 +41,7 @@ export function NavbarLeft() {
         >
           Create Post
         </Button>
+        <Button mt={"13em"}>Logout</Button>
       </Box>
     </>
   );

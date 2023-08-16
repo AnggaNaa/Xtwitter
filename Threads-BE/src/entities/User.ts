@@ -15,7 +15,7 @@ export class User {
   @Column()
   email: string;
   // { select: false }
-  @Column()
+  @Column({ select: false }) // supaya password tidak muncul setelah login
   password: string;
 
   @Column({ nullable: true })

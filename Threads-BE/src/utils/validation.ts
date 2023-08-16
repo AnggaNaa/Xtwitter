@@ -6,3 +6,8 @@ export const userSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
 });
+
+export const threadSChema = Joi.object({
+  content: Joi.string(),
+  filename: Joi.string(),
+});

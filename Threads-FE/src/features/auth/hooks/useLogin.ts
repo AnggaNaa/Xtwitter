@@ -1,5 +1,5 @@
 import { User } from "@/features/thread";
-import { API, setAuthToken } from "@/lib/api";
+import { API } from "@/lib/api";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AUTH_LOGIN } from "@/stores/rootReducer";
@@ -44,29 +44,28 @@ export function useLogin() {
       const response = await API.post("/login", form);
       //  {
       //     email: form.email,
-      //     passwo rd: form.password,
+      //     password: form.password,
       //   });
       // Lakukan sesuatu setelah berhasil login, misalnya redirect atau menyimpan token
       // Dapatkan token dari respons API
-      const Authorization = response.data.token;
+      // const token = response.data.token;
+      dispatch(AUTH_LOGIN(response.data));
 
       // Simpan token ke state
       // setToken(authToken);
-      localStorage.setItem("Authorization", Authorization);
-      setAuthToken(localStorage.Authorization);
+      // localStorage.setItem("token", token);
+      // setAuthToken(localStorage.token);
 
       console.log(response.data, "ini post");
 
-      setForm({
-        email: "",
-        password: "",
-      });
+      // setForm({
+      //   email: "",
+      //   password: "",
+      // });
       setSuccessAlert("Login berhasil!");
       setErrorAlert("");
       navigate("/"); // Ganti '/dashboard' dengan rute tujuan setelah login
-      // toast({
-      //   title: "Registrasi Berhasil",
-      // });
+
       // fetchData();
     } catch (err: any) {
       if (err.response && err.response.data) {

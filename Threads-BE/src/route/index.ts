@@ -7,6 +7,7 @@ import * as getRepository from "typeorm";
 import { User } from "../entities/User";
 import * as bcrypt from "bcrypt";
 import verifyToken from "../middlewares/auth";
+import { upload } from "../middlewares/uploadsFile";
 
 const router = express.Router();
 // const router2 = express.Router();
@@ -22,19 +23,19 @@ router.get("/", (req: Request, res: Response) => {
 // });
 
 router.get("/threads", verifyToken, threadController.find);
-router.get("/threads/:id", threadController.findOne);
-router.post("/threads/create", threadController.create);
-router.delete("/threads/delete/:id", threadController.delete);
-router.patch("/threads/update/:id", threadController.update);
+router.get("/threads/:id", verifyToken, threadController.findOne);
+router.post("/threads", verifyToken, upload("image"), threadController.create);
+router.delete("/threads/delete/:id", verifyToken, threadController.delete);
+router.patch("/threads/update/:id", verifyToken, threadController.update);
 
 router.get("/user", userController.find);
 router.get("/user/:id", userController.findOne);
-router.post("/user", userController.create);
 router.delete("/user/:id", userController.delete);
 router.patch("/user/:id", userController.update);
 
 router.get("/check", verifyToken, authController.check);
 
+router.post("/user", userController.create);
 router.post("/login", authController.findOne);
 
 // Contoh data pengguna (biasanya dari database)

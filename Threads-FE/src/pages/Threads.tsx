@@ -9,63 +9,73 @@ import {
   Icon,
   Input,
   useToast,
+  Image,
+  Box,
 } from "@chakra-ui/react";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { ImFilePicture } from "react-icons/im";
 
-interface IthreadsPost {
-  content: string;
-  image: string;
-}
-
 export function Threads() {
-  // const [data, _] = useState(Data);
-
   const toast = useToast();
   const [Threads, setThread] = useState<ThreadCard[]>([]);
-  const [form, setForm] = useState<IthreadsPost>({
+  const [form, setForm] = useState({
     content: "",
-    image: "",
+    image: null,
   });
+  const [previewImage, setPreviewImage] = useState<string>("");
 
   const fetchData = async () => {
-    // try {
-    const response = await API.get("/threads", {
-      headers: {
-        Authorization: `Bearer ${localStorage.Authorization}`,
-      },
-    });
-    setThread(response.data);
+    try {
+      const response = await API.get("/threads", {
+        headers: {
+          token: `Bearer ${localStorage.token}`,
+        },
+      });
+      setThread(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
 
-  const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
-    });
-  };
+  function changeHandler(event: ChangeEvent<HTMLInputElement>) {
+    const { name, value, files } = event.target;
+    if (files) {
+      console.log("ini files", files[0]);
+      const image = URL.createObjectURL(files[0]);
+      setPreviewImage(image);
+      setForm({
+        ...form,
+        [name]: files[0],
+      });
+    } else {
+      console.log("ini value", value);
+      setForm({
+        ...form,
+        [name]: value,
+      });
+    }
+  }
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    const formData = new FormData();
+    formData.append("content", form.content);
+    if (form.image) {
+      formData.append("image", form.image);
+    }
     try {
-      const response = await API.post("/threads/create", {
-        content: form.content,
-        image: form.image,
-      });
+      const response = await API.post("/threads", formData);
+
       console.log(response.data, "ini post");
       setForm({
         content: "",
-        image: "",
+        image: null,
       });
-      toast({
-        title: "Threads",
-      });
+
+      setPreviewImage("");
       fetchData();
     } catch (err) {
+      console.log("ini eror", err);
       toast({
         title: "Coba Lagi",
         status: "error",
@@ -87,22 +97,37 @@ export function Threads() {
         borderX={"1px"}
         borderColor={"grey"}
       >
-        <Avatar src="https://berita.yodu.id/wp-content/uploads/2023/05/urutan-nonton-one-piece.png"></Avatar>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
           <Flex>
-            <FormControl>
-              <Input
-                name="content"
-                value={form.content}
-                onChange={changeHandler}
-                placeholder="What is happening ?!"
-                // size="lg"
-                width={"30em"}
-                border={0}
-                required
-              />
-            </FormControl>
-
+            <Box>
+              <Avatar src="https://berita.yodu.id/wp-content/uploads/2023/05/urutan-nonton-one-piece.png"></Avatar>
+            </Box>
+            <Box
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"center"}
+            >
+              <FormControl>
+                <Input
+                  name="content"
+                  value={form.content}
+                  onChange={changeHandler}
+                  placeholder="What is happening ?!"
+                  width={"30em"}
+                  border={0}
+                  required
+                />
+              </FormControl>
+              {previewImage && (
+                <Image
+                  objectFit={"cover"}
+                  width={"100%"}
+                  height={"15em"}
+                  mt={"1em"}
+                  src={previewImage}
+                />
+              )}
+            </Box>
             <FormControl id="image" mr={"20em"} display={"flex"}>
               <FormLabel width={"0.5em"}>
                 <Icon
@@ -117,12 +142,12 @@ export function Threads() {
               <Input
                 type="file"
                 name="image"
-                value={form.image}
+                // value={form.image}
                 onChange={changeHandler}
                 placeholder="What is ur image ?!"
-                // size="lg"
                 width={"0"}
                 border={0}
+                accept="image/*"
                 hidden
               />
               <Button

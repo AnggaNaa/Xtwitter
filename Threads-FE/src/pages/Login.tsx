@@ -17,6 +17,9 @@ import {
 } from "@chakra-ui/react";
 import { useLogin } from "@/features/auth/hooks/useLogin";
 
+// import { useSelector } from "react-redux";
+// import { RootState } from "@/stores/types/rootState";
+
 export default function Login() {
   const {
     handleSubmit,
@@ -26,6 +29,8 @@ export default function Login() {
     successAlert,
     form,
   } = useLogin();
+
+  // const auth = useSelector((state: RootState) => state.auth);
 
   return (
     <Flex
