@@ -29,7 +29,7 @@ export interface ThreadCard {
 }
 
 export function ThreadCard(props: ThreadCard) {
-  const [likesCount, setLikeCount] = useState(props.replies_count || 0);
+  const [likesCount, setLikeCount] = useState(props.likes_count || 0);
   const [isLiked, setIsLike] = useState(props.is_liked || false);
 
   const handlerLikeClick = () => {

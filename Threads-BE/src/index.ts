@@ -4,15 +4,21 @@ import { Thread } from "./entities/Thread";
 import * as express from "express";
 import { Request, Response } from "express";
 import router from "./route";
-// require("dotenv").config();
+import * as dotenv from "dotenv";
+// import { processQueue } from "./queues/worker";
 
-// dotenv.config();
+dotenv.config();
 
 AppDataSource.initialize()
   .then(async () => {
     const app = express();
     const port = 5000;
+
+    // processQueue();
+
     const cors = require("cors");
+
+    // processQueue()
 
     app.use(cors());
     // const router = express.Router();

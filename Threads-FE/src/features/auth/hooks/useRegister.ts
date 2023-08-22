@@ -1,6 +1,7 @@
 import { User } from "@/features/thread";
 import { API } from "@/lib/api";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface ICreateUser {
   username: string;
@@ -9,11 +10,16 @@ interface ICreateUser {
   password: string;
 }
 
+interface IAlert {
+  message: string;
+}
+
 export function useRegister() {
   const [showPassword, setShowPassword] = useState(false);
-  const [errorAlert, setErrorAlert] = useState("");
+  const [errorAlert, setErrorAlert] = useState<IAlert[]>([]);
   const [successAlert, setSuccessAlert] = useState("");
 
+  const navigate = useNavigate();
   const [_, setUser] = useState<User[]>([]);
   const [form, setForm] = useState<ICreateUser>({
     username: "",
@@ -55,8 +61,9 @@ export function useRegister() {
         email: "",
         password: "",
       });
+      navigate("/login");
       setSuccessAlert("Registrasi berhasil!");
-      setErrorAlert("");
+      // setErrorAlert("");
 
       // toast({
       //   title: "Registrasi Berhasil",
@@ -66,7 +73,11 @@ export function useRegister() {
       if (err.response && err.response.data) {
         setErrorAlert(err.response.data.error);
       } else {
-        setErrorAlert("Terjadi kesalahan pada server");
+        // setErrorAlert("Terjadi kesalahan pada server");
+        setErrorAlert((prevAlerts) => [
+          ...prevAlerts,
+          { message: "Terjadi kesalahan pada server" },
+        ]);
       }
 
       // toast({

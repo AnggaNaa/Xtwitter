@@ -1,6 +1,6 @@
 import { Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
-import { Request, Response } from "express";
+import { Request, Response, response } from "express";
 import { Thread } from "../entities/Thread";
 import { v2 as cloudinary } from "cloudinary";
 import { threadSChema } from "../utils/validation";
@@ -13,10 +13,20 @@ class ThreadServices {
   async find(req: Request, res: Response): Promise<Response> {
     try {
       const threads = await this.threadRepository.find({
-        relations: ["user"],
+        relations: ["user", "likes", "replies"],
         order: { id: "DESC" },
       });
-      return res.status(200).json(threads);
+
+      let responseBaru = [];
+
+      threads.forEach((element) => {
+        responseBaru.push({
+          ...element,
+          likes_count: element.likes.length,
+          replies_count: element.replies.length,
+        });
+      });
+      return res.status(200).json(responseBaru);
     } catch (err) {
       return res.status(500).json({ error: "Error while getting threads" });
     }

@@ -56,13 +56,20 @@ export default function SignUp() {
           p={8}
         >
           <form onSubmit={handleSubmit}>
-            {errorAlert && (
+            {errorAlert.map((alert, index) => (
+              <Alert key={index} status="error" mb={4}>
+                <AlertIcon />
+                <AlertTitle mr={2}>There is an error</AlertTitle>
+                <AlertDescription>{alert.message}</AlertDescription>
+              </Alert>
+            ))}
+            {/* {errorAlert && (
               <Alert status="error" mb={4}>
                 <AlertIcon />
                 <AlertTitle mr={2}>Terjadi Kesalahan</AlertTitle>
-                <AlertDescription>{errorAlert}</AlertDescription>
+                <AlertDescription>{errorAlert.message}</AlertDescription>
               </Alert>
-            )}
+            )} */}
 
             {successAlert && (
               <Alert status="success" mb={4}>

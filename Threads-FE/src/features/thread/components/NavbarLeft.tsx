@@ -2,9 +2,25 @@ import { Text, Box, Button, Icon } from "@chakra-ui/react";
 import { AiFillHome, AiOutlineSearch } from "react-icons/ai";
 import { RiUserFollowFill } from "react-icons/Ri";
 import { CgProfile } from "react-icons/Cg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { AUTH_LOGOUT } from "@/stores/rootReducer";
 
 export function NavbarLeft() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    // const response = await API.get("/check");
+    dispatch(AUTH_LOGOUT()); // Panggil aksi logout yang sesuai
+    // localStorage.removeItem("token");
+
+    navigate("/login");
+
+    // localStorage.removeItem("token");
+    // window.location.reload();
+  }
+
   return (
     <>
       <Box
@@ -41,7 +57,9 @@ export function NavbarLeft() {
         >
           Create Post
         </Button>
-        <Button mt={"13em"}>Logout</Button>
+        <Button mt={"13em"} onClick={handleLogout}>
+          Logout
+        </Button>
       </Box>
     </>
   );

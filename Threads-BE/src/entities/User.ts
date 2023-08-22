@@ -1,5 +1,13 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Thread } from "./Thread";
+import { Follows } from "./Follow";
+import { Likes } from "./Like";
 
 @Entity({ name: "users" })
 export class User {
@@ -29,4 +37,22 @@ export class User {
     onUpdate: "CASCADE",
   })
   threads: Thread[];
+
+  @OneToMany(() => Likes, (like) => like.user, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  likes: Likes[];
+
+  @OneToMany(() => Follows, (follower) => follower.id, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  follower: Follows[];
+
+  @OneToMany(() => Follows, (followed) => followed.id, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  following: Follows[];
 }

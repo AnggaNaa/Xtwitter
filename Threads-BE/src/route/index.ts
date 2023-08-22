@@ -8,6 +8,8 @@ import { User } from "../entities/User";
 import * as bcrypt from "bcrypt";
 import verifyToken from "../middlewares/auth";
 import { upload } from "../middlewares/uploadsFile";
+import queueController from "../controllers/queue-controller";
+import replieController from "../controllers/replie-controller";
 
 const router = express.Router();
 // const router2 = express.Router();
@@ -24,9 +26,13 @@ router.get("/", (req: Request, res: Response) => {
 
 router.get("/threads", verifyToken, threadController.find);
 router.get("/threads/:id", verifyToken, threadController.findOne);
-router.post("/threads", verifyToken, upload("image"), threadController.create);
+// router.post("/threads", verifyToken, upload("image"), threadController.create);
+router.post("/threads", verifyToken, upload("image"), queueController.enqueue);
 router.delete("/threads/delete/:id", verifyToken, threadController.delete);
 router.patch("/threads/update/:id", verifyToken, threadController.update);
+
+router.get("/replies", verifyToken, replieController.find);
+router.post("/reply", verifyToken, replieController.create);
 
 router.get("/user", userController.find);
 router.get("/user/:id", userController.findOne);

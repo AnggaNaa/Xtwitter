@@ -13,6 +13,7 @@ const verifyToken = (
   }
 
   const tokens = token.split(" ")[1];
+  console.log("ini tokens", tokens);
 
   try {
     const loginSession = jwt.verify(tokens, "inirahasia");

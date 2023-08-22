@@ -1,8 +1,6 @@
-import { User } from "@/features/thread";
 import { IAUTH } from "@/interface/auth";
 import { setAuthToken } from "@/lib/api";
 import { createSlice } from "@reduxjs/toolkit";
-import { useNavigate } from "react-router-dom";
 
 const initialAuthState: { data: IAUTH } = {
   data: {
@@ -46,8 +44,16 @@ export const authSlice = createSlice({
     },
     AUTH_LOGOUT: () => {
       localStorage.removeItem("token");
-      const navigate = useNavigate();
-      navigate("/login");
+      // state.data = {
+      //   id: 0,
+      //   email: "",
+      //   full_name: "",
+      //   username: "",
+      // };
+      return initialAuthState;
+      // const navigate = useNavigate();
+      // navigate("/login"); //dihapus
+      //setAuthToken(null)
     },
   },
 });
