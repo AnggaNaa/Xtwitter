@@ -60,7 +60,8 @@ export default function SignUp() {
               <Alert key={index} status="error" mb={4}>
                 <AlertIcon />
                 <AlertTitle mr={2}>There is an error</AlertTitle>
-                <AlertDescription>{alert.message}</AlertDescription>
+
+                <AlertDescription>{alert as string}</AlertDescription>
               </Alert>
             ))}
             {/* {errorAlert && (

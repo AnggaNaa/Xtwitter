@@ -10,6 +10,7 @@ import {
 } from "react-icons/ai";
 
 import { useReply } from "@/features/auth/hooks/useReply";
+import { ThreadCard } from "@/features/thread";
 
 export function DetailProject() {
   // const { id } = useParams();
@@ -215,11 +216,13 @@ export function DetailProject() {
                         mx={1}
                         as={AiFillLike}
                       ></Icon>
-                      {reply.likes_count} Like
+                      {/* {reply.likes_count}  */}
+                      Like
                       {/* <Button size={"sm"} ml={2} border={"none"}> */}
                       <Box ml={3} cursor={"pointer"}>
                         <Icon as={ChatIcon} mr={2} />
-                        {reply.replies_count} Replies
+                        {/* {reply.replies_count}  */}
+                        Replies
                       </Box>
                       {/* </Button> */}
                     </Box>

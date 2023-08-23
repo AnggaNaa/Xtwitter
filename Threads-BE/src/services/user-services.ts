@@ -20,18 +20,17 @@ class UserServices {
     }
   }
 
-  async findOne(req: Request, res: Response) {
+  async findOne(loginSession: any): Promise<any> {
     try {
-      const id = parseInt(req.params.id);
       const user = await this.userRepository.findOne({
         where: {
-          id: id,
+          id: loginSession.id,
         },
         relations: ["threads"],
       });
-      return res.status(200).json(user);
+      return { user: user };
     } catch (err) {
-      return res.status(500).json({ error: "Error while getting threads" });
+      throw new Error("Error while getting findOne User");
     }
   }
 
@@ -47,7 +46,7 @@ class UserServices {
         where: { email: value.email },
       });
       if (existingUser) {
-        return res.status(400).json({ error: "Email already exists" });
+        return res.status(400).json(error);
       }
 
       const hashedPassword = await bcrypt.hash(value.password, 10);

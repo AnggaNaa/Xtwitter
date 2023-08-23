@@ -1,28 +1,29 @@
-// // import { Request, Response } from "express";
-// import LikeThread from "../services/like-services";
-// // import { User } from "../entities/User";
-// // import { Thread } from "../entities/Thread";
+import { Request, Response } from "express";
+import likeServices from "../services/like-services";
 
-// // class LikeController {
-// //   // find(user: User, thread: Thread) {
-// //   //     LikeServices.getLikesByThread(thread);
-// //   // }
+class LikesController {
+  async create(req: Request, res: Response) {
+    try {
+      const loginSession = res.locals.loginSession;
 
-//   findOne(req: Request, res: Response) {
-//     LikeThread.LikeThread(req, res);
-//   }
+      const response = await likeServices.create(req.body, loginSession);
+      return res.status(200).json(response);
+    } catch (err) {
+      return res.status(500).json({ error: "Error while creating like" });
+    }
+  }
 
-// // //   // create(req: Request, res: Response) {
-// // //   //   UserServices.create(req, res);
-// // //   // }
+  async delete(req: Request, res: Response) {
+    try {
+      const loginSession = res.locals.loginSession;
+      const threadId = parseInt(req.params.thread_id);
 
-// // //   delete(likeId: number) {
-// // //     LikeServices.deleteLike(likeId);
-// // //   }
+      const response = await likeServices.delete(threadId, loginSession);
+      return res.status(200).json(response);
+    } catch (err) {
+      return res.status(500).json({ error: "Error while deleting like" });
+    }
+  }
+}
 
-// // //   // update(req: Request, res: Response) {
-// // //   //   UserServices.update(req, res);
-// // //   // }
-// // }
-
-// // export default new LikeController();
+export default new LikesController();

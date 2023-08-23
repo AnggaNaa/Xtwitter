@@ -11,3 +11,8 @@ export const threadSChema = Joi.object({
   content: Joi.string(),
   filename: Joi.string(),
 });
+
+export const loginSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().required(),
+});

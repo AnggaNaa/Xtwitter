@@ -4,15 +4,15 @@ import { AppDataSource } from "../data-source";
 import { Thread } from "../entities/Thread";
 import { v2 as cloudinary } from "cloudinary";
 
-async function processQueue() {
+export async function processQueue() {
   const queueName = "thread-queue";
-  // cloudinaryConfig();
-  cloudinary.config({
-    cloud_name: "daqitl4oc",
-    api_key: "664683232595348",
-    api_secret: "_ePVIHvaFcP4isCL52QZv8RraV0",
-    secure: true,
-  });
+  cloudinaryConfig();
+  // cloudinary.config({
+  //   cloud_name: "daqitl4oc",
+  //   api_key: "664683232595348",
+  //   api_secret: "_ePVIHvaFcP4isCL52QZv8RraV0",
+  //   secure: true,
+  // });
 
   try {
     const connection = await amqp.connect("amqp://localhost");

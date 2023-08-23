@@ -100,7 +100,7 @@ export function Threads() {
         <form onSubmit={handleSubmit} encType="multipart/form-data">
           <Flex>
             <Box>
-              <Avatar src="https://berita.yodu.id/wp-content/uploads/2023/05/urutan-nonton-one-piece.png"></Avatar>
+              <Avatar name="a" src={Threads[0]?.user?.profile_picture}></Avatar>
             </Box>
             <Box
               display={"flex"}
@@ -120,7 +120,7 @@ export function Threads() {
               </FormControl>
               {previewImage && (
                 <Image
-                  objectFit={"cover"}
+                  objectFit={"contain"}
                   width={"100%"}
                   height={"15em"}
                   mt={"1em"}
@@ -167,19 +167,20 @@ export function Threads() {
         </form>
       </Flex>
 
-      {Threads.map((dummy, i) => (
+      {Threads.map((item, i) => (
         <ThreadCard
-          user={dummy.user}
+          user={item.user}
           key={i}
-          id={dummy.id}
-          // author_full_name={dummy.author_full_name}
-          // author_picture={dummy.author_picture}
-          // author_username={dummy.author_username}
-          content={dummy.content}
-          image={dummy.image}
-          likes_count={dummy.likes_count}
-          posted_at={dummy.posted_at}
-          replies_count={dummy.replies_count}
+          id={item.id}
+          // author_full_name={item.author_full_name}
+          // author_picture={item.author_picture}
+          // author_username={item.author_username}
+          is_liked={item.is_liked}
+          content={item.content}
+          image={item.image}
+          likes_count={item.likes_count}
+          posted_at={item.posted_at}
+          replies_count={item.replies_count}
         />
       ))}
     </>

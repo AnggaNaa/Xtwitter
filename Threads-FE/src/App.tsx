@@ -20,7 +20,7 @@ function App() {
   async function authCheck() {
     try {
       setAuthToken(localStorage.token);
-      const response = await API.get("/check");
+      const response = await API.get("/auth/check");
       dispatch(AUTH_CHECK(response.data));
       console.log("auth check berhasil", response);
       setIsLoading(false);
@@ -38,7 +38,7 @@ function App() {
       authCheck();
     } else {
       setIsLoading(false);
-      navigate("/login");
+      // navigate("/login");
     }
   }, []);
 

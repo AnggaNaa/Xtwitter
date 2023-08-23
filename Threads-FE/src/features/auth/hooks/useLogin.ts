@@ -41,7 +41,7 @@ export function useLogin() {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     try {
-      const response = await API.post("/login", form);
+      const response = await API.post("/auth/login", form);
       //  {
       //     email: form.email,
       //     password: form.password,

@@ -1,8 +1,14 @@
 import { Avatar, Box, Text, Icon, Button, Image } from "@chakra-ui/react";
 import { ChatIcon } from "@chakra-ui/icons";
 import { AiFillCheckCircle, AiFillLike } from "react-icons/ai";
-import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useThreadCard } from "@/features/auth/hooks/useThread";
+import {
+  differenceInDays,
+  differenceInHours,
+  differenceInMinutes,
+  parseISO,
+} from "date-fns";
 
 export interface User {
   id?: number;
@@ -20,7 +26,7 @@ export interface ThreadCard {
   author_picture?: string;
   author_full_name?: string;
   author_username?: string;
-  posted_at?: string;
+  posted_at: string;
   content?: string;
   image?: string;
   likes_count?: number;
@@ -29,17 +35,35 @@ export interface ThreadCard {
 }
 
 export function ThreadCard(props: ThreadCard) {
-  const [likesCount, setLikeCount] = useState(props.likes_count || 0);
-  const [isLiked, setIsLike] = useState(props.is_liked || false);
+  const { handlerLikeClick } = useThreadCard();
 
-  const handlerLikeClick = () => {
-    if (isLiked) {
-      setLikeCount(likesCount - 1);
-    } else {
-      setLikeCount(likesCount + 1);
-    }
-    setIsLike(!isLiked);
-  };
+  const postDate_at = parseISO(props.posted_at);
+
+  const today = new Date();
+  const postDay = new Date(postDate_at);
+
+  const differenceDays = differenceInDays(today, postDay);
+  const differencehours = differenceInHours(today, postDay);
+  const differenceMinutes = differenceInMinutes(today, postDay);
+
+  let postDay_at = "";
+
+  if (differenceDays > 0) {
+    postDay_at = `${differenceDays} day ago `;
+  } else if (differencehours > 0) {
+    postDay_at = `${differencehours} hour ago`;
+  } else {
+    postDay_at = `${differenceMinutes} minute ago`;
+  }
+
+  // const handlerLikeClick = () => {
+  //   if (isLiked) {
+  //     setLikeCount(likesCount - 1);
+  //   } else {
+  //     setLikeCount(likesCount + 1);
+  //   }
+  //   setIsLike(!isLiked);
+  // };
   return (
     <>
       <Box>
@@ -57,7 +81,7 @@ export function ThreadCard(props: ThreadCard) {
                   as={AiFillCheckCircle}
                 ></Icon>
               </Box>
-              <Text style={{ color: "grey" }}>{props.posted_at}</Text>
+              <Text style={{ color: "grey" }}>{postDay_at}</Text>
             </Box>
             <Box mb={3}>
               <Link to={"detail/" + props.id}>
@@ -68,24 +92,25 @@ export function ThreadCard(props: ThreadCard) {
             <Box mb={5} display={"flex"} alignItems={"center"}>
               <Icon
                 cursor={"pointer"}
-                onClick={handlerLikeClick}
-                color={isLiked ? "twitter.700" : "white"}
+                onClick={() => handlerLikeClick(props.id, props.is_liked)}
+                color={props.is_liked ? "twitter.700" : "white"}
                 fontSize="larger"
                 mx={1}
                 as={AiFillLike}
               ></Icon>
-              <Text color="white"> {likesCount} Like </Text>
-              <Link to={"detail/" + props.id}>
-                <Button
-                  size={"sm"}
-                  ml={2}
-                  color="white"
-                  colorScheme="blackAlpha"
-                >
-                  <Icon as={ChatIcon} mr={2} color={"white"} />
-                  {props.replies_count} Replies
-                </Button>
-              </Link>
+              <Text color="white"> {props.likes_count} Like </Text>
+              {/* <Link to={"detail/" + props.id}> */}
+              <Button
+                size={"sm"}
+                ml={2}
+                color="white"
+                colorScheme="blackAlpha"
+                onClick={() => `/threads/${props.id}`}
+              >
+                <Icon as={ChatIcon} mr={2} color={"white"} />
+                {props.replies_count} Replies
+              </Button>
+              {/* </Link> */}
             </Box>
           </Box>
         </Box>

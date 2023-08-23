@@ -10,13 +10,9 @@ interface ICreateUser {
   password: string;
 }
 
-interface IAlert {
-  message: string;
-}
-
 export function useRegister() {
   const [showPassword, setShowPassword] = useState(false);
-  const [errorAlert, setErrorAlert] = useState<IAlert[]>([]);
+  const [errorAlert, setErrorAlert] = useState<string[]>([]);
   const [successAlert, setSuccessAlert] = useState("");
 
   const navigate = useNavigate();
@@ -47,7 +43,7 @@ export function useRegister() {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     try {
-      const response = await API.post("/user", form);
+      const response = await API.post("/auth/register", form);
       // {
       //   username: form.username,
       //   full_name: form.full_name,
@@ -63,21 +59,27 @@ export function useRegister() {
       });
       navigate("/login");
       setSuccessAlert("Registrasi berhasil!");
-      // setErrorAlert("");
+      setErrorAlert([]);
 
       // toast({
       //   title: "Registrasi Berhasil",
       // });
       fetchData();
-    } catch (err: any) {
-      if (err.response && err.response.data) {
-        setErrorAlert(err.response.data.error);
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.data.error &&
+        Array.isArray(error.response.data.error)
+      ) {
+        setErrorAlert(error.response.data.error);
       } else {
-        // setErrorAlert("Terjadi kesalahan pada server");
-        setErrorAlert((prevAlerts) => [
-          ...prevAlerts,
-          { message: "Terjadi kesalahan pada server" },
-        ]);
+        console.log("YANG BENER COK", error.response.data.error as string);
+        setErrorAlert([, error.response.data.error]);
+
+        // setErrorAlert((prevAlerts) => [
+        //   ...prevAlerts,
+        //   { message: "Email already exists" },
+        // ]);
       }
 
       // toast({

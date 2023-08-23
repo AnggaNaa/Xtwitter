@@ -41,7 +41,7 @@ export function useReply() {
 
   async function getThreadById() {
     try {
-      const response = await API.get(`/threads/${id}`);
+      const response = await API.get("/threads/" + id);
       setThread(response.data);
       console.log("berhasil mendapatkan thread", response.data);
     } catch (err) {
