@@ -14,14 +14,14 @@ class ThreadServices {
 
   async find(reqQuery?: any, loginSession?: any): Promise<any> {
     try {
-      // const limit = parseInt(reqQuery.limit ?? 0);
+      const limit = parseInt(reqQuery.limit ?? 0);
 
       const threads = await this.threadRepository.find({
         relations: ["user", "likes.user", "replies"],
         order: {
           id: "DESC",
         },
-        // take: limit,
+        take: limit,
       });
 
       return threads.map((element) => ({
@@ -33,7 +33,7 @@ class ThreadServices {
         replies_count: element.replies.length,
         likes_count: element.likes.length,
         is_liked: element.likes.some(
-          (like: any) => like.user.id === loginSession.id
+          (like: any) => like.user.id === loginSession.user.id
         ),
       }));
     } catch (err) {
@@ -59,7 +59,7 @@ class ThreadServices {
         replies_count: thread.replies.length,
         likes_count: thread.likes.length,
         is_liked: thread.likes.some(
-          (like: any) => like.user.id === loginSession.id
+          (like: any) => like.user.id === loginSession.user.id
         ),
       };
     } catch (err) {

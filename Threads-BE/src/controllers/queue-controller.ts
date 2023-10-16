@@ -7,10 +7,10 @@ class QueueController {
     try {
       const queueName = "thread-queue";
       const filename = res.locals.filename;
-      // const data = {
-      //   content: req.body.content,
-      //   image: filename,
-      // };
+      const data = {
+        content: req.body.content,
+        image: filename,
+      };
       // const { error } = threadSChema.validate(data);
       // if (error) {
       //   return res.status(400).json({ error: error });
@@ -19,9 +19,9 @@ class QueueController {
       const loginSession = res.locals.loginSession;
 
       const payload = {
-        content: req.body.content,
-        image: filename,
-        user_id: loginSession.id,
+        content: data.content,
+        image: data.image,
+        user_id: loginSession.user.id,
       };
 
       console.log("iki payload", payload);

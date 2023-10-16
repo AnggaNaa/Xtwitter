@@ -1,34 +1,76 @@
-import { Repository } from "typeorm";
+import { ILike, Like, Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { User } from "../entities/User";
 import { Request, Response } from "express";
 import { userSchema } from "../utils/validation";
 import * as bcrypt from "bcrypt";
+// import generateRandomIndices from "../controllers/random-controller";
 
 class UserServices {
   private readonly userRepository: Repository<User> =
     AppDataSource.getRepository(User);
 
-  async find(req: Request, res: Response): Promise<Response> {
+  async searchByName(req: Request, res: Response): Promise<Response> {
     try {
-      const user = await this.userRepository.find({
-        relations: ["threads"],
+      const { query } = req.query;
+
+      if (!query) {
+        return res.status(400).json({ error: "Missing search query" });
+      }
+
+      const users = await this.userRepository.find({
+        // relations: ["threads"],
+        where: [
+          { full_name: ILike(`%${query}%`) },
+          { username: Like(`%${query}%`) },
+        ],
       });
-      return res.status(200).json(user);
+
+      return res.status(200).json(users);
     } catch (err) {
-      return res.status(500).json({ error: "Error while getting threads" });
+      return res.status(500).json({ error: "Error while searching users" });
     }
   }
 
-  async findOne(loginSession: any): Promise<any> {
+  async getRandomUsersWithFollow(): Promise<User[]> {
+    const totalUsers = await this.userRepository.count();
+    // const randomIndices = generateRandomIndices(totalUsers, 3);
+
+    const randomUsers = await this.userRepository
+      .createQueryBuilder("user")
+      .orderBy("RANDOM()")
+      .take(2)
+      // .where("user.id IN (:...randomIndices)", { randomIndices })
+      // .leftJoinAndSelect('user.followers', 'follower')
+      // .leftJoinAndSelect('user.following', 'following')
+      .getMany();
+
+    return randomUsers;
+  }
+
+  async findOne(req: Request, res: Response) {
     try {
+      const id = parseInt(req.params.id);
       const user = await this.userRepository.findOne({
         where: {
-          id: loginSession.id,
+          id: id,
         },
-        relations: ["threads"],
+        relations: ["threads", "threads.user"],
       });
-      return { user: user };
+      return res.status(200).json(user);
+      // relations: ["threads"],
+
+      // try {
+      //   const idFromSession = req.body.user.id; // Ganti dengan properti yang sesuai dalam sesi login Anda
+      //   if (idFromSession === undefined) {
+      //     return res.status(400).json({ error: 'User ID not found in session' });
+      //   }
+
+      //   const user = await this.userRepository.findOne(idFromSession);
+
+      //   if (!user) {
+      //     return res.status(404).json({ error: 'User not found' });
+      //   }
     } catch (err) {
       throw new Error("Error while getting findOne User");
     }
@@ -109,4 +151,16 @@ class UserServices {
   }
 }
 
+// function generateRandomIndices(totalCount: number, count: number): number[] {
+//   const randomIndices = [];
+//   while (randomIndices.length < count) {
+//     const randomIndex = Math.floor(Math.random() * totalCount);
+//     if (!randomIndices.includes(randomIndex)) {
+//       randomIndices.push(randomIndex);
+//     }
+//   }
+//   return randomIndices;
+// }
+
+// const userServices = new UserServices();
 export default new UserServices();

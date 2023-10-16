@@ -3,7 +3,7 @@ import { User } from "./User";
 import { Thread } from "./Thread";
 
 @Entity({ name: "replies" })
-export class Replies {
+export class Reply {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -13,13 +13,13 @@ export class Replies {
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   posted_at: Date;
 
-  @ManyToOne(() => User, (user) => user.id, {
+  @ManyToOne(() => User, (user) => user.replies, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
   user: User;
 
-  @ManyToOne(() => Thread, (thread) => thread.id, {
+  @ManyToOne(() => Thread, (thread) => thread.replies, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })

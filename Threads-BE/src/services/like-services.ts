@@ -8,23 +8,23 @@ class LikesServices {
   private readonly likeRepository: Repository<Likes> =
     AppDataSource.getRepository(Likes);
 
-  async findOne(req: Request, res: Response) {
-    const id = parseInt(req.params.id);
-    const thread = await this.likeRepository.findOne({
-      where: {
-        id: id,
-      },
-      relations: ["threads"],
-    });
-    return res.status(200).json(thread);
-  }
+  // async findOne(req: Request, res: Response) {
+  //   const id = parseInt(req.params.id);
+  //   const thread = await this.likeRepository.findOne({
+  //     where: {
+  //       id: id,
+  //     },
+  //     relations: ["threads"],
+  //   });
+  //   return res.status(200).json(thread);
+  // }
 
   async create(reqBody: any, loginSession: any) {
     try {
       const isLikeExist = await this.likeRepository.count({
         where: {
           user: {
-            id: loginSession.id,
+            id: loginSession.user.id,
           },
           thread: {
             id: reqBody.thread_id,
@@ -41,7 +41,7 @@ class LikesServices {
           id: reqBody.thread_id,
         },
         user: {
-          id: loginSession.id,
+          id: loginSession.user.id,
         },
       });
 
@@ -61,7 +61,7 @@ class LikesServices {
       const like = await this.likeRepository.findOne({
         where: {
           user: {
-            id: loginSession.id,
+            id: loginSession.user.id,
           },
           thread: {
             id: threadId,

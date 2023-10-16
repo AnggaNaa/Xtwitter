@@ -1,10 +1,10 @@
 import { Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
-import { Replies } from "../entities/Replie";
+import { Reply } from "../entities/Replie";
 
 class ReplieServices {
-  private readonly replieRepository: Repository<Replies> =
-    AppDataSource.getRepository(Replies);
+  private readonly replieRepository: Repository<Reply> =
+    AppDataSource.getRepository(Reply);
 
   async find(reqQuery): Promise<any> {
     try {
@@ -32,7 +32,7 @@ class ReplieServices {
       const reply = this.replieRepository.create({
         content: reqBody.content,
         user: {
-          id: loginSession.id,
+          id: loginSession.user.id,
         },
         thread: {
           id: reqBody.thread_id,

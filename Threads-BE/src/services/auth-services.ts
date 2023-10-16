@@ -76,7 +76,7 @@ class AuthServices {
   }
 
   async login(reqBody: any): Promise<any> {
-    const { email, password } = reqBody;
+    // const { email, password } = reqBody;
     try {
       const { error } = loginSchema.validate(reqBody);
 
@@ -84,31 +84,56 @@ class AuthServices {
         throw new Error(error.details[0].message);
       }
       const user = await this.authRepository.findOne({
-        where: { email },
-        select: ["id", "full_name", "username", "email", "password"],
+        where: { email: reqBody.email },
+        select: [
+          "id",
+          "full_name",
+          "username",
+          "email",
+          "password",
+          "profile_picture",
+          "profile_description",
+          "profile_background",
+        ],
       });
 
       if (!user) {
         throw new Error("Email tidak ditemukan");
       }
 
-      const isPasswordValid = await bcrypt.compare(password, user.password);
+      const isPasswordValid = await bcrypt.compare(
+        reqBody.password,
+        user.password
+      );
 
       if (!isPasswordValid) {
         throw new Error("Password salah");
       }
 
       // Membuat token JWT
-      const token = jwt.sign({ id: user.id, email: user.email }, "inirahasia", {
-        expiresIn: "1h",
-      });
+      const token = jwt.sign(
+        {
+          user,
+          // id: user.id,
+          // fullname: user.full_name,
+          // username: user.username,
+          // email: user.email,
+        },
+        "inirahasia",
+        {
+          expiresIn: "1h",
+        }
+      );
       return {
         message: "Login Successfull",
         user: {
           id: user.id,
-          fullname: user.full_name,
+          full_name: user.full_name,
           username: user.username,
           email: user.email,
+          profile_picture: user.profile_picture,
+          profile_description: user.profile_description,
+          profile_background: user.profile_background,
         },
         token: token,
       };
@@ -121,12 +146,22 @@ class AuthServices {
     try {
       const user = await this.authRepository.findOne({
         where: {
-          id: loginSession.id,
+          id: loginSession.user.id,
         },
       });
       return {
         message: "Token is valid",
-        user: user,
+        user: {
+          id: user.id,
+          full_name: user.full_name,
+          username: user.username,
+          email: user.email,
+          profile_picture: user.profile_picture,
+          profile_description: user.profile_description,
+          profile_background: user.profile_background,
+        },
+
+        // user: user,
       };
     } catch (err) {
       throw new Error("Token is not valid");

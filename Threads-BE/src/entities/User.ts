@@ -6,8 +6,9 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Thread } from "./Thread";
-import { Follows } from "./Follow";
+import { Follow } from "./Follow";
 import { Likes } from "./Like";
+import { Reply } from "./Replie";
 
 @Entity({ name: "users" })
 export class User {
@@ -30,6 +31,9 @@ export class User {
   profile_picture: string;
 
   @Column({ nullable: true })
+  profile_background: string;
+
+  @Column({ nullable: true })
   profile_description: string;
 
   @OneToMany(() => Thread, (thread) => thread.user, {
@@ -44,15 +48,21 @@ export class User {
   })
   likes: Likes[];
 
-  @OneToMany(() => Follows, (follower) => follower.id, {
+  @OneToMany(() => Follow, (follow) => follow.followed, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
-  follower: Follows[];
+  followers: Follow[];
 
-  @OneToMany(() => Follows, (followed) => followed.id, {
+  @OneToMany(() => Follow, (follow) => follow.follower, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
-  following: Follows[];
+  followings: Follow[];
+
+  @OneToMany(() => Reply, (Reply) => Reply.user, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  replies: Reply[];
 }

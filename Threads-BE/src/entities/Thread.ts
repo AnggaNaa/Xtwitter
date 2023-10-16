@@ -7,7 +7,7 @@ import {
 } from "typeorm";
 import { User } from "./User";
 import { Likes } from "./Like";
-import { Replies } from "./Replie";
+import { Reply } from "./Replie";
 
 @Entity({ name: "threads" })
 export class Thread {
@@ -29,11 +29,11 @@ export class Thread {
   })
   likes: Likes[];
 
-  @OneToMany(() => Replies, (replie) => replie.thread, {
+  @OneToMany(() => Reply, (like) => like.thread, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
-  replies: Replies[];
+  replies: Reply[];
 
   @ManyToOne(() => User, (user) => user.threads, {
     onDelete: "CASCADE",

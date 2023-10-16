@@ -11,6 +11,8 @@ import { upload } from "../middlewares/uploadsFile";
 import queueController from "../controllers/queue-controller";
 import replieController from "../controllers/replie-controller";
 import likeController from "../controllers/like-controller";
+import FollowsController from "../controllers/follow-controller";
+import { getRandomUsers } from "../controllers/userRandom-controller";
 
 const router = express.Router();
 // const router2 = express.Router();
@@ -38,15 +40,24 @@ router.post("/reply", verifyToken, replieController.create);
 router.post("/like", verifyToken, likeController.create);
 router.delete("/like/:thread_id", verifyToken, likeController.delete);
 
-router.get("/user", userController.find);
+router.get("/user/search", userController.find);
 router.get("/user/:id", userController.findOne);
 router.delete("/user/:id", userController.delete);
 router.patch("/user/:id", userController.update);
 
 router.get("/auth/check", verifyToken, authController.check);
-
 router.post("/auth/register", authController.register);
 router.post("/auth/login", authController.login);
+
+router.get("/follows", verifyToken, FollowsController.find);
+router.post("/follow", verifyToken, FollowsController.create);
+router.delete(
+  "/follow/:followed_user_id",
+  verifyToken,
+  FollowsController.delete
+);
+
+router.get("/random-users", getRandomUsers);
 
 // Contoh data pengguna (biasanya dari database)
 // const users = [
