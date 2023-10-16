@@ -1,6 +1,6 @@
 import { Navigate, Outlet, Route, Routes, useNavigate } from "react-router-dom";
 import Home from "@/pages/Home";
-import { Threads } from "./pages/Threads";
+import UseThreads from "./pages/Threads";
 import { DetailProject } from "./pages/DetailProject";
 import SignUp from "./pages/Register";
 import Login from "./pages/Login";
@@ -10,6 +10,10 @@ import { useDispatch } from "react-redux";
 import { AUTH_CHECK, AUTH_ERROR } from "./stores/rootReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "./stores/types/rootState";
+import Follows from "./pages/Follows";
+import UserProfileEdit from "./pages/EditProfile";
+import UserProfile from "./pages/MyProfile";
+import { SearchUser } from "./pages/tes";
 
 function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -22,7 +26,7 @@ function App() {
       setAuthToken(localStorage.token);
       const response = await API.get("/auth/check");
       dispatch(AUTH_CHECK(response.data));
-      console.log("auth check berhasil", response);
+      // console.log("auth check berhasil", response);
       setIsLoading(false);
     } catch (err) {
       dispatch(AUTH_ERROR());
@@ -43,15 +47,15 @@ function App() {
   }, []);
 
   function IsLogin() {
-    if (!auth.data.username) {
-      return <Navigate to={"/login"} />;
+    if (!auth.username) {
+      return <Navigate to={"/"} />;
     } else {
       return <Outlet />;
     }
   }
 
   function IsNotLogin() {
-    if (auth.data.username) {
+    if (auth.username) {
       return <Navigate to={"/"} />;
     } else {
       return <Outlet />;
@@ -64,8 +68,12 @@ function App() {
         <Routes>
           <Route path="/" element={<IsLogin />}>
             <Route path="/" element={<Home />}>
-              <Route index element={<Threads />}></Route>
+              <Route index element={<UseThreads />}></Route>
               <Route path="detail/:id" element={<DetailProject />}></Route>
+              <Route path="follows" element={<Follows />}></Route>
+              <Route path="myprofile/:id" element={<UserProfileEdit />} />
+              <Route path="/profile/:id" element={<UserProfile />}></Route>
+              <Route path="user/search" element={<SearchUser />}></Route>
             </Route>
           </Route>
 

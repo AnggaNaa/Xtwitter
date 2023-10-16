@@ -73,7 +73,7 @@ export function useRegister() {
       ) {
         setErrorAlert(error.response.data.error);
       } else {
-        console.log("YANG BENER COK", error.response.data.error as string);
+        console.log("YANG BENER C*K", error.response.data.error as string);
         setErrorAlert([, error.response.data.error]);
 
         // setErrorAlert((prevAlerts) => [

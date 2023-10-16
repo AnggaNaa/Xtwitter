@@ -2,13 +2,14 @@ import { IAUTH } from "@/interface/auth";
 import { setAuthToken } from "@/lib/api";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialAuthState: { data: IAUTH } = {
-  data: {
-    id: 0,
-    email: "",
-    full_name: "",
-    username: "",
-  },
+const initialAuthState: IAUTH = {
+  id: 0,
+  email: "",
+  full_name: "",
+  username: "",
+  profile_picture: "",
+  profile_description: "",
+  profile_background: "",
 };
 
 export const authSlice = createSlice({
@@ -16,28 +17,72 @@ export const authSlice = createSlice({
   initialState: initialAuthState,
   reducers: {
     AUTH_LOGIN: (state, action) => {
-      const payload = action.payload;
-      console.log("redux authLogin :", payload);
-      setAuthToken(payload.token);
-      localStorage.setItem("token", payload.token);
-      console.log(localStorage);
+      const {
+        id,
+        email,
+        full_name,
+        username,
+        profile_picture,
+        profile_description,
+        profile_background,
+        threads,
+      } = action.payload.user;
 
-      (state.data.id = payload.user.id),
-        (state.data.full_name = payload.user.full_name),
-        (state.data.username = payload.user.username),
-        (state.data.email = payload.user.email);
+      const { token } = action.payload;
+
+      setAuthToken(token);
+      localStorage.setItem("token", token);
+
+      state.id = id;
+      state.username = username;
+      state.full_name = full_name;
+      state.email = email;
+      state.profile_picture = profile_picture;
+      state.profile_description = profile_description;
+      state.profile_background = profile_background;
+      state.threads = threads;
+      // const payload = action.payload;
+      // console.log("redux authLogin :", payload);
+      // setAuthToken(payload.token);
+      // localStorage.setItem("token", payload.token);
+      // console.log(localStorage);
+
+      // (state.id = payload.user.id),
+      //   (state.full_name = payload.user.full_name),
+      //   (state.username = payload.user.username),
+      //   (state.email = payload.user.email);
 
       // return state;
     },
     AUTH_CHECK: (state, action) => {
-      const payload = action.payload;
-      console.log("ini data redux authCheck :", payload);
-      console.log(localStorage);
+      const {
+        id,
+        email,
+        full_name,
+        username,
+        profile_picture,
+        profile_description,
+        profile_background,
+        threads,
+      } = action.payload.user;
 
-      (state.data.id = payload.user.id),
-        (state.data.full_name = payload.user.full_name),
-        (state.data.username = payload.user.username),
-        (state.data.email = payload.user.email);
+      state.id = id;
+      state.email = email;
+      state.full_name = full_name;
+      state.username = username;
+      state.profile_picture = profile_picture;
+      state.profile_description = profile_description;
+      state.profile_background = profile_background;
+      state.threads = threads;
+
+      // const payload = action.payload;
+      // console.log("ini data redux authCheck :", payload);
+      // console.log(localStorage);
+
+      // (state.id = payload.user.id),
+      //   (state.full_name = payload.user.full_name),
+      //   (state.username = payload.user.username),
+      //   (state.email = payload.user.email);
     },
     AUTH_ERROR: () => {
       localStorage.removeItem("token");

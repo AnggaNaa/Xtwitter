@@ -1,7 +1,7 @@
 import { Avatar, Box, Text, Icon, Button, Image } from "@chakra-ui/react";
 import { ChatIcon } from "@chakra-ui/icons";
 import { AiFillCheckCircle, AiFillLike } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useThreadCard } from "@/features/auth/hooks/useThread";
 import {
   differenceInDays,
@@ -9,32 +9,40 @@ import {
   differenceInMinutes,
   parseISO,
 } from "date-fns";
+import { IFollow } from "@/interface/follow";
+import { IAUTH } from "@/interface/auth";
 
 export interface User {
-  id?: number;
+  id: number;
   username?: string;
   full_name?: string;
   email?: string;
   profile_picture?: string;
   profile_description?: string | null;
   password?: string;
+  auth: IAUTH;
+  // follow: IFollow;
+  // threads?: ThreadCard;
 }
 
 export interface ThreadCard {
   user?: User;
-  id?: number;
-  author_picture?: string;
-  author_full_name?: string;
-  author_username?: string;
+  id: number;
   posted_at: string;
   content?: string;
   image?: string;
-  likes_count?: number;
+  likes_count: number;
   replies_count?: number;
-  is_liked?: boolean;
+  is_liked: boolean;
+}
+
+export interface IThreadPost {
+  content: string;
+  image: Blob | MediaSource | string;
 }
 
 export function ThreadCard(props: ThreadCard) {
+  const navigate = useNavigate();
   const { handlerLikeClick } = useThreadCard();
 
   const postDate_at = parseISO(props.posted_at);
@@ -84,9 +92,16 @@ export function ThreadCard(props: ThreadCard) {
               <Text style={{ color: "grey" }}>{postDay_at}</Text>
             </Box>
             <Box mb={3}>
-              <Link to={"detail/" + props.id}>
-                <Text mb={2}> {props.content}</Text>
-              </Link>
+              {/* <Link to={"detail/" + props.id}> */}
+              <Text
+                mb={2}
+                onClick={() => navigate(`/detail/${props.id}`)}
+                cursor={"pointer"}
+              >
+                {" "}
+                {props.content}
+              </Text>
+              {/* </Link> */}
               <Image src={props.image} alt="" />
             </Box>
             <Box mb={5} display={"flex"} alignItems={"center"}>
@@ -105,7 +120,8 @@ export function ThreadCard(props: ThreadCard) {
                 ml={2}
                 color="white"
                 colorScheme="blackAlpha"
-                onClick={() => `/threads/${props.id}`}
+                onClick={() => navigate(`/detail/${props.id}`)}
+                cursor={"pointer"}
               >
                 <Icon as={ChatIcon} mr={2} color={"white"} />
                 {props.replies_count} Replies

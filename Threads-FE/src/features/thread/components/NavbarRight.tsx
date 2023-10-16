@@ -1,3 +1,4 @@
+import { RootState } from "@/stores/types/rootState";
 import {
   Box,
   Text,
@@ -19,8 +20,33 @@ import {
   AiFillLinkedin,
   AiFillTwitterCircle,
 } from "react-icons/ai";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { User } from "./ThreadCard";
+import { useEffect, useState } from "react";
+import { API } from "@/lib/api";
+
+// interface IRandomUser {
+//   id: Number;
+//   name: String;
+// }
 
 export function NavbarRight() {
+  // const { User, getUserById } = useProfile();
+  const auth = useSelector((state: RootState) => state.auth);
+
+  const [randomUsers, setRandomUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await API.get("/random-users");
+      const data = response.data;
+      setRandomUsers(data);
+    }
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <Box position={"fixed"}>
@@ -37,12 +63,13 @@ export function NavbarRight() {
               </Heading>
               <Box display={"flex"} flexDirection={"column"}>
                 <Image
-                  src="https://berita.yodu.id/wp-content/uploads/2023/05/urutan-nonton-one-piece.png"
+                  src={auth.profile_background}
+                  height={"13em"}
                   alt="Green double couch with wooden legs"
                   borderRadius="lg"
                 />
                 <Image
-                  src="https://asset.kompas.com/crops/26yVfPEUtlADYfL6sNGt-9ls3tk=/91x0:1250x773/750x500/data/photo/2023/08/05/64ce32fae37d0.png"
+                  src={auth.profile_picture}
                   height={"100px"}
                   width={"100px"}
                   objectFit={"cover"}
@@ -52,18 +79,19 @@ export function NavbarRight() {
                   border={"4px solid white"}
                 />
                 <Box mt={"-7"}>
-                  <Button float={"right"}>Edit Profile</Button>
+                  <Link to={"/myprofile/" + auth.id}>
+                    <Button float={"right"}>Edit Profile</Button>
+                  </Link>
                 </Box>
               </Box>
               <Stack mt="2" spacing="2">
                 <Heading size="md">
-                  Angga Nur A{" "}
+                  {/* Angga Nur A{" "} */}
+                  {auth.full_name}
                   <Icon color={"twitter.500"} as={AiFillCheckCircle}></Icon>
                 </Heading>
-                <Text>@anggana</Text>
-                <Text>
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                </Text>
+                <Text>@{auth.username}</Text>
+                <Text noOfLines={1}>{auth.profile_description}</Text>
                 <Box display={"flex"}>
                   <Text mr={1}>111 </Text>
                   <Text mr={5}>Following</Text>
@@ -77,6 +105,42 @@ export function NavbarRight() {
           </Card>
         </Box>
         <Box p={2}>
+          <Card
+            width={"380px"}
+            height={"190px"}
+            bg={"gray.900"}
+            color={"whiteAlpha.800"}
+          >
+            {randomUsers.map((user) => (
+              <CardBody
+                display={"flex"}
+                justifyContent={"space-between"}
+                key={user.id}
+              >
+                <Box display={"flex"}>
+                  <Avatar src="https://assets.ayobandung.com/crop/152x71:1413x663/750x500/webp/photo/2022/11/02/2204493026.jpeg" />
+                  <Box ml={3}>
+                    <Text>{user.full_name}</Text>
+                    <Text>@ {user.username}</Text>
+                  </Box>
+                </Box>
+                <Box>
+                  <Button
+                    colorScheme="gray"
+                    border={10}
+                    borderColor={"black"}
+                    borderRadius={20}
+                    px={8}
+                    mt={1}
+                  >
+                    Follow
+                  </Button>
+                </Box>
+              </CardBody>
+            ))}
+          </Card>
+        </Box>
+        {/* <Box p={2}>
           <Card
             width={"380px"}
             height={"190px"}
@@ -153,15 +217,15 @@ export function NavbarRight() {
               </Box>
             </CardBody>
             {/* <Divider /> */}
-            <CardFooter></CardFooter>
+        {/* <CardFooter></CardFooter>
           </Card>
-        </Box>
-
+        </Box> */}{" "}
+        {/* } */}
         <Box p={2}>
           <Card width={"380px"} bg={"gray.900"} color={"whiteAlpha.800"}>
             <CardBody display={"flex"} justifyContent={"space-between"}>
               <Box display={"flex"} gap={2}>
-                <Text>Developed by Your Name</Text>
+                <Text>Developed by DUMBWAYS.ID</Text>
                 <Icon as={AiFillGithub} fontSize={"2xl"}></Icon>
                 <Icon as={AiFillLinkedin} fontSize={"2xl"}></Icon>
                 <Icon as={AiFillFacebook} fontSize={"2xl"}></Icon>

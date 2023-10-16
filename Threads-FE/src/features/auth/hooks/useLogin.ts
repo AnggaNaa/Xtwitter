@@ -1,6 +1,5 @@
-import { User } from "@/features/thread";
 import { API } from "@/lib/api";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AUTH_LOGIN } from "@/stores/rootReducer";
 import { useDispatch } from "react-redux";
@@ -16,20 +15,20 @@ export function useLogin() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [_, setUser] = useState<User[]>([]);
+  // const [_, setUser] = useState<User[]>([]);
   const [form, setForm] = useState<ILogin>({
     email: "",
     password: "",
   });
 
-  const fetchData = async () => {
-    try {
-      const response = await API.get("/user");
-      setUser(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await API.get("/user");
+  //     setUser(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
 
   const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -38,10 +37,17 @@ export function useLogin() {
     });
   };
 
+  // async function handleSubmit() {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     try {
       const response = await API.post("/auth/login", form);
+      dispatch(AUTH_LOGIN(response.data));
+      navigate("/"); // Ganti '/dashboard' dengan rute tujuan setelah login
+      console.log("ini dari login", response.data);
+      setSuccessAlert("Login berhasil!");
+      setErrorAlert("");
+
       //  {
       //     email: form.email,
       //     password: form.password,
@@ -49,22 +55,16 @@ export function useLogin() {
       // Lakukan sesuatu setelah berhasil login, misalnya redirect atau menyimpan token
       // Dapatkan token dari respons API
       // const token = response.data.token;
-      dispatch(AUTH_LOGIN(response.data));
 
       // Simpan token ke state
       // setToken(authToken);
       // localStorage.setItem("token", token);
       // setAuthToken(localStorage.token);
 
-      console.log(response.data, "ini post");
-
       // setForm({
       //   email: "",
       //   password: "",
       // });
-      setSuccessAlert("Login berhasil!");
-      setErrorAlert("");
-      navigate("/"); // Ganti '/dashboard' dengan rute tujuan setelah login
 
       // fetchData();
     } catch (err: any) {
@@ -82,9 +82,9 @@ export function useLogin() {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   return {
     handleSubmit,

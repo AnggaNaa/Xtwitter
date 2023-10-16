@@ -169,6 +169,7 @@ export function DetailProject() {
               name="content"
               value={form.content}
               onChange={handleChange}
+              required
             />
             <Icon as={ImFilePicture} fontSize={"1.5em"} mx={4}></Icon>
             <Button

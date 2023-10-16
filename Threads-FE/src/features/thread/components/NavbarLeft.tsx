@@ -3,10 +3,12 @@ import { AiFillHome, AiOutlineSearch } from "react-icons/ai";
 import { RiUserFollowFill } from "react-icons/Ri";
 import { CgProfile } from "react-icons/Cg";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AUTH_LOGOUT } from "@/stores/rootReducer";
+import { RootState } from "@/stores/types/rootState";
 
 export function NavbarLeft() {
+  const auth = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -39,14 +41,27 @@ export function NavbarLeft() {
             <Icon as={AiFillHome} mr={3}></Icon>Home{" "}
           </Text>
         </Link>
-        <Text fontSize="2xl" mb={4}>
+        <Text
+          fontSize="2xl"
+          mb={4}
+          cursor={"pointer"}
+          onClick={() => navigate(`/user/search`)}
+        >
           <Icon as={AiOutlineSearch} mr={2}></Icon> Search
         </Text>
-        <Text fontSize="2xl" mb={3}>
-          <Icon as={RiUserFollowFill} mr={3}></Icon>Follow
-        </Text>
-        <Text fontSize="2xl" mb={10}>
-          <Icon as={CgProfile} mr={3}></Icon>Profile
+        <Link to={"/follows"}>
+          <Text fontSize="2xl" mb={3}>
+            <Icon as={RiUserFollowFill} mr={3}></Icon>Follow
+          </Text>
+        </Link>
+        <Text
+          fontSize="2xl"
+          mb={10}
+          onClick={() => navigate(`/profile/` + auth.id)}
+          cursor="pointer"
+        >
+          <Icon as={CgProfile} mr={3}></Icon>
+          Profile
         </Text>
         <Button
           width={"300px"}
@@ -57,7 +72,7 @@ export function NavbarLeft() {
         >
           Create Post
         </Button>
-        <Button mt={"13em"} onClick={handleLogout}>
+        <Button onClick={handleLogout}>
           Logout
         </Button>
       </Box>

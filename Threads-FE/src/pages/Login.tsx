@@ -115,6 +115,7 @@ export default function Login() {
                   _hover={{
                     bg: "blue.500",
                   }}
+                  onClick={handleSubmit}
                 >
                   Sign in
                 </Button>
