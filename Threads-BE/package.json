@@ -33,7 +33,7 @@
     "typeorm": "0.3.17"
   },
   "scripts": {
-    "start": "nodemon src/index.ts",
+    "start": "ts-node src/index.ts",
     "typeorm": "typeorm-ts-node-commonjs",
     "migration:generate": "npx typeorm-ts-node-commonjs migration:generate src/migrations/MyMigration -d src/data-source.ts",
     "migration:run": "npx typeorm-ts-node-commonjs migration:run -d src/data-source.ts"
