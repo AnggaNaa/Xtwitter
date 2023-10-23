@@ -18,7 +18,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalOverlay,
   ModalHeader,
 } from "@chakra-ui/react";
@@ -29,12 +28,11 @@ import { useDispatch, useSelector } from "react-redux";
 export default function UseThreads() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [inputValue, setInputValue] = useState("");
   // const [Threads, setThread] = useState<ThreadCard[]>([]);
   const auth = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   const threads = useSelector((state: RootState) => state.thread.threads);
-  const user = useSelector((state: RootState) => state.auth);
+  // const user = useSelector((state: RootState) => state.auth);
   const [form, setForm] = useState<IThreadPost>({
     content: "",
     image: "",
@@ -56,6 +54,8 @@ export default function UseThreads() {
 
   async function getThreads() {
     const response = await API.get("/threads");
+    console.log("ini data", response.data);
+
     dispatch(GET_THREADS(response.data));
   }
 
@@ -87,6 +87,7 @@ export default function UseThreads() {
     }
     try {
       const response = await API.post("/threads", formData);
+      // dispatch(GET_THREADS(response.data));
 
       console.log(response.data, "ini post");
       setForm({
@@ -95,7 +96,11 @@ export default function UseThreads() {
       });
 
       setPreviewImage("");
-      getThreads();
+
+      setTimeout(() => {
+        getThreads();
+      }, 5000);
+
     } catch (err) {
       console.log("ini eror", err);
       toast({
@@ -124,9 +129,9 @@ export default function UseThreads() {
         borderColor={"grey"}
       >
         <form encType="multipart/form-data">
-          <Button onClick={() => console.log("ini user", user)}>
+          {/* <Button onClick={() => console.log("ini user", user)}>
             INI BUTTON
-          </Button>
+          </Button> */}
           <Flex>
             <Box>
               <Avatar name="a" src={auth.profile_picture}></Avatar>
@@ -161,8 +166,8 @@ export default function UseThreads() {
                       alignItems={"center"}
                       p={3}
                       m={0}
-                      // borderX={"1px"}
-                      // borderColor={"grey"}
+                    // borderX={"1px"}
+                    // borderColor={"grey"}
                     >
                       <form
                         onSubmit={handleSubmit}

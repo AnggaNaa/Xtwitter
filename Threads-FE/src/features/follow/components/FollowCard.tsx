@@ -57,6 +57,7 @@ export function FollowCard(props: IFollow) {
             <Text color="brand.grey">@{props.username}</Text>
             <Text>Tes Doeloe</Text>
           </Box>
+
           <Box flex={1} display="flex" justifyContent={"flex-end"}>
             <Button
               // onClick={handleFollow} isLoading={isLoading}
@@ -64,9 +65,13 @@ export function FollowCard(props: IFollow) {
                 handleFollow(props.id, props.user_id, props.is_followed)
               }
             >
-              {props.is_followed ? "Unfollow" : "Follow"}
+              {isLoading ? (<>  Loading...  </>) : (
+
+                props.is_followed ? "Unfollow" : "Follow"
+              )}
             </Button>
           </Box>
+
         </Box>
       </Box>
     </>

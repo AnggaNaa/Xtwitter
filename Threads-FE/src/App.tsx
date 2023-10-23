@@ -48,7 +48,7 @@ function App() {
 
   function IsLogin() {
     if (!auth.username) {
-      return <Navigate to={"/"} />;
+      return <Navigate to={"/login"} />;
     } else {
       return <Outlet />;
     }

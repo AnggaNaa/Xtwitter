@@ -25,6 +25,9 @@ import { Link } from "react-router-dom";
 import { User } from "./ThreadCard";
 import { useEffect, useState } from "react";
 import { API } from "@/lib/api";
+import { GET_FOLLOWS } from "@/stores/rootReducer";
+import { useDispatch } from "react-redux";
+import useFollowHandler from "@/features/hooks/useFollow";
 
 // interface IRandomUser {
 //   id: Number;
@@ -34,18 +37,33 @@ import { API } from "@/lib/api";
 export function NavbarRight() {
   // const { User, getUserById } = useProfile();
   const auth = useSelector((state: RootState) => state.auth);
-
   const [randomUsers, setRandomUsers] = useState<User[]>([]);
+  const followState = useSelector(
+    (state: RootState) => state.follow.followState
+  )
+  console.log("followState", followState)
+  const follows = useSelector((state: RootState) => state.follow.follows);
+  const { isLoading, handleFollow } = useFollowHandler();
+  const dispatch = useDispatch();
+
+  async function fetchData() {
+    const response = await API.get("/random-users");
+    const data = response.data;
+    setRandomUsers(data);
+  }
+
+  async function getFollowData() {
+    const response = await API.get(`/follows?type=${followState}`);
+    dispatch(GET_FOLLOWS(response.data));
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await API.get("/random-users");
-      const data = response.data;
-      setRandomUsers(data);
-    }
-
     fetchData();
+    getFollowData();
   }, []);
+
+  //   fetchData();
+  // }, [auth]);
 
   return (
     <>
@@ -85,7 +103,7 @@ export function NavbarRight() {
                 </Box>
               </Box>
               <Stack mt="2" spacing="2">
-                <Heading size="md">
+                <Heading size="md" display={"flex"} alignItems={"center"}>
                   {/* Angga Nur A{" "} */}
                   {auth.full_name}
                   <Icon color={"twitter.500"} as={AiFillCheckCircle}></Icon>
@@ -130,10 +148,14 @@ export function NavbarRight() {
                     border={10}
                     borderColor={"black"}
                     borderRadius={20}
-                    px={8}
+                    px={4}
                     mt={1}
+                    fontSize={"sm"}
+                    onClick={() => handleFollow(auth.id, user.id, follows.some(follow => follow.user_id === user.id))}
+                    isLoading={isLoading}
                   >
-                    Follow
+                    {/* Follow */}
+                    {follows.some(follow => follow.user_id === user.id) ? "Unfollow" : "Follow"}
                   </Button>
                 </Box>
               </CardBody>

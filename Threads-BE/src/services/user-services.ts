@@ -4,6 +4,8 @@ import { User } from "../entities/User";
 import { Request, Response } from "express";
 import { userSchema } from "../utils/validation";
 import * as bcrypt from "bcrypt";
+import cloudinaryConfig from "../libs/config";
+import { v2 as cloudinary } from "cloudinary";
 // import generateRandomIndices from "../controllers/random-controller";
 
 class UserServices {
@@ -56,6 +58,12 @@ class UserServices {
           id: id,
         },
         relations: ["threads", "threads.user"],
+        order: {
+          // threads: "DESC",
+          threads: {
+            id: "DESC",
+          },
+        },
       });
       return res.status(200).json(user);
       // relations: ["threads"],
@@ -121,32 +129,114 @@ class UserServices {
   async update(req: Request, res: Response) {
     try {
       const id = parseInt(req.params.id);
-      const {
-        username,
-        full_name,
-        email,
-        password,
-        profile_picture,
-        profile_description,
-      } = req.body;
+      // const filename = res.locals.filename;
+      // console.log("ini filename :", filename);
+      // const profilePictureFilename = res.locals.profile_picture;
+      // const profileBackgroundFilename = res.locals.profile_background;
+      // const profilePictureFilename = res.locals.filename;
+      // const profilePictureFilename = res.locals.profile_picture;
+      // const profilePictureFilename = req.files["profile_picture"];
+      // const profileBackgroundFilename = req.files["profile_background"];
+      // const profilePictureFilename = req.files["profile_picture"];
+      // const profileBackgroundFilename = req.files["profile_background"];
+
+      // console.log("ini profilePictureFilename :", profilePictureFilename);
+      // console.log("ini profileBackgroundFilename :", profileBackgroundFilename);
+
+      // const profilePictureFile = req.file; // Mengakses berkas menggunakan req.file
+      // const profileBackgroundFile = req.files["profile_background"];
+
+      // console.log("ini profilePictureFile:", profilePictureFile);
+      // console.log("ini profileBackgroundFile:", profileBackgroundFile);
+      const objUser = {};
+      const images = req.files;
+      Object.keys(images).forEach((key) => {
+        objUser[images[key][0].fieldname] = images[key][0].filename;
+      });
+      console.log("ini objUser", objUser);
+
+      // const currentKey = Object.keys(image)[0];
+      // const file = image[currentKey][0].filename;
+
+      const { username, full_name, email, password, profile_description } =
+        req.body;
       const user = await this.userRepository.findOne({
         where: {
           id: id,
         },
       });
 
+      cloudinaryConfig();
+
+      await Promise.all(
+        Object.keys(objUser).map(async (key) => {
+          const profilePictureCloudinaryResponse =
+            await cloudinary.uploader.upload("./uploads/" + objUser[key]);
+          user[key] = profilePictureCloudinaryResponse.secure_url;
+          console.log("ini cloudinary : ", profilePictureCloudinaryResponse);
+        })
+      );
+
+      console.log("ini pp", user.profile_picture);
+
+      // if (image[0]?.filename) {
+      //   const profilePictureCloudinaryResponse =
+      //     await cloudinary.uploader.upload(
+      //       "./uploads/" + image[0]?.filename
+      //     );
+      //   user.profile_picture = profilePictureCloudinaryResponse.secure_url;
+      // }
+
+      // if (profileBackgroundFilename) {
+      //   const profileBackgroundCloudinaryResponse =
+      //     await cloudinary.uploader.upload(
+      //       "./uploads/" + profileBackgroundFilename
+      //     );
+      //   user.profile_background =
+      //     profileBackgroundCloudinaryResponse.secure_url;
+      // }
+
+      // if (profilePictureFile) {
+      //   const profilePictureCloudinaryResponse =
+      //     await cloudinary.uploader.upload(profilePictureFile.path);
+      //   user.profile_picture = profilePictureCloudinaryResponse.secure_url;
+      // }
+
+      // if (profileBackgroundFile) {
+      //   const profileBackgroundCloudinaryResponse =
+      //     await cloudinary.uploader.upload(profileBackgroundFile[0].path);
+      //   user.profile_background =
+      //     profileBackgroundCloudinaryResponse.secure_url;
+      // }
+
       user.username = username;
       user.full_name = full_name;
       user.email = email;
       user.password = password;
-      user.profile_picture = profile_picture;
       user.profile_description = profile_description;
+      // user[image[0]?.fieldname] = image[0]?.filename;
+
+      // if (filename) {
+      //   const cloudinaryResponse = await cloudinary.uploader.upload(
+      //     "./uploads/" + filename
+      //   );
+      //   console.log("ini cloudinary : ", cloudinaryResponse);
+      //   user.username = username;
+      //   user.full_name = full_name;
+      //   user.email = email;
+      //   user.password = password;
+      //   user.profile_picture = cloudinaryResponse.secure_url;
+      //   user.profile_description = profile_description;
+      // }
+      // user.profile_background = profile_background;
 
       const updateThread = await this.userRepository.save(user);
 
+      // return res.status(200).json({ message: "done bos" });
       return res.status(200).json(updateThread);
     } catch (err) {
-      return res.status(500).json({ error: "Error while getting threads" });
+      // return res.status(500).json(err);
+      return res.status(500).json({ error: "Error while getting update" });
     }
   }
 }

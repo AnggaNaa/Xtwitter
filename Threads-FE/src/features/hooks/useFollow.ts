@@ -1,7 +1,9 @@
 import { IFollow } from "@/interface/follow";
 import { API } from "@/lib/api";
-import { SET_FOLLOW } from "@/stores/rootReducer";
-import { useState } from "react";
+import { GET_FOLLOWS, SET_FOLLOW } from "@/stores/rootReducer";
+import { RootState } from "@/stores/types/rootState";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
 export default function useFollowHandler() {
@@ -10,6 +12,9 @@ export default function useFollowHandler() {
   // isFollowed: boolean
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const followState = useSelector(
+    (state: RootState) => state.follow.followState
+  );
 
   const handleFollow = async (
     id: number,
@@ -24,6 +29,9 @@ export default function useFollowHandler() {
         await API.delete(`/follow/${followedUserId}`);
       }
       dispatch(SET_FOLLOW({ id, isFollowed: !isFollowed }));
+      const response = await API.get(`/follows?type=${followState}`);
+      dispatch(GET_FOLLOWS(response.data));
+      setIsLoading(false);
     } catch (err) {
       console.log("ini eror follow di search", err);
       setIsLoading(false);
@@ -31,6 +39,7 @@ export default function useFollowHandler() {
       setIsLoading(false);
     }
   };
+
   return {
     isLoading,
     handleFollow,

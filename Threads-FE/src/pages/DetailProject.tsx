@@ -1,6 +1,6 @@
 import { Avatar, Box, Button, Icon, Input, Text } from "@chakra-ui/react";
 import { ImFilePicture } from "react-icons/im";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChatIcon } from "@chakra-ui/icons";
 
 import {
@@ -11,6 +11,8 @@ import {
 
 import { useReply } from "@/features/auth/hooks/useReply";
 import { ThreadCard } from "@/features/thread";
+import { RootState } from "@/stores/types/rootState";
+import { useSelector } from "react-redux";
 
 export function DetailProject() {
   // const { id } = useParams();
@@ -85,16 +87,23 @@ export function DetailProject() {
 
   // const element = Threads.find((el) => el.id === Number(id));
 
+  const auth = useSelector((state: RootState) => state.auth);
+
   const { form, Threads, replies, totalComments, handleChange, handlePost } =
     useReply();
+
+  const navigate = useNavigate()
+  const handleGoBack = () => {
+    navigate(-1)
+  }
 
   return (
     <>
       <Box borderX={"1px"} borderColor={"grey"}>
         <Box display={"flex"} alignItems={"center"}>
-          <Link to={"/"}>
-            <Icon m={2} fontSize={"1.8em"} as={AiOutlineArrowLeft}></Icon>
-          </Link>
+          {/* <Link to={"/"}> */}
+          <Icon m={2} fontSize={"1.8em"} onClick={handleGoBack} cursor={"pointer"} as={AiOutlineArrowLeft}></Icon>
+          {/* </Link> */}
           <Text as="b" fontSize={"2xl"}>
             Status
           </Text>
@@ -161,7 +170,7 @@ export function DetailProject() {
             border={"1px"}
             borderColor={"grey"}
           >
-            <Avatar src="https://berita.yodu.id/wp-content/uploads/2023/05/urutan-nonton-one-piece.png"></Avatar>
+            <Avatar src={auth.profile_picture}></Avatar>
             <Input
               placeholder="Type your reply!"
               size="lg"

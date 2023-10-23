@@ -7,7 +7,7 @@ import * as getRepository from "typeorm";
 import { User } from "../entities/User";
 import * as bcrypt from "bcrypt";
 import verifyToken from "../middlewares/auth";
-import { upload } from "../middlewares/uploadsFile";
+import { upload, uploadFile, uploadSingle } from "../middlewares/uploadsFile";
 import queueController from "../controllers/queue-controller";
 import replieController from "../controllers/replie-controller";
 import likeController from "../controllers/like-controller";
@@ -43,7 +43,12 @@ router.delete("/like/:thread_id", verifyToken, likeController.delete);
 router.get("/user/search", userController.find);
 router.get("/user/:id", userController.findOne);
 router.delete("/user/:id", userController.delete);
-router.patch("/user/:id", userController.update);
+
+router.patch(
+  "/user/:id",
+  uploadFile("profile_picture", "profile_background"),
+  userController.update
+);
 
 router.get("/auth/check", verifyToken, authController.check);
 router.post("/auth/register", authController.register);

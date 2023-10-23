@@ -38,6 +38,13 @@ export function SearchUser() {
   const follows = useSelector((state: RootState) => state.follow.follows);
 
 
+  const dispatch = useDispatch();
+
+  const followState = useSelector(
+    (state: RootState) => state.follow.followState
+  );
+
+
 
   const { isLoading, handleFollow } = useFollowHandler();
 
@@ -45,6 +52,7 @@ export function SearchUser() {
     try {
       const response = await API.get(`/user/search?query=${searchQuery}`);
       setUsers(response.data);
+
     } catch (error) {
       console.error("Error searching users:", error);
     }
@@ -55,6 +63,17 @@ export function SearchUser() {
       handleSearch();
     }
   };
+
+  async function getFollowData() {
+    const response = await API.get(`/follows?type=${followState}`);
+    dispatch(GET_FOLLOWS(response.data));
+  }
+
+
+  useEffect(() => {
+    handleSearch();
+    getFollowData();
+  }, [followState]);
 
   return (
     <Box mt={5}>
@@ -81,7 +100,7 @@ export function SearchUser() {
         {users.map((user) => (
           <Box key={user.id} display={"flex"} width="100%" padding={"20px 0px"}>
             <Image
-              src={user.profile_picture}
+              src={user.profile_picture ?? "https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1697414400&semt=ais"}
               width={"50px"}
               height={"50px"}
               objectFit={"cover"}
@@ -108,22 +127,13 @@ export function SearchUser() {
                   //   handleFollow(auth.id, user.id, follows.filter((follow: IFollow) => follow.user_id === user.id).length > 0)
                   // }
                   onClick={() => handleFollow(auth.id, user.id, follows.some(follow => follow.user_id === user.id))}
-
                   isLoading={isLoading}
                 >
-                  {/* follow */}
-                  {/* {follows.filter((follow: IFollow) => follow.user_id === user.id).length > 0 ? "Unfollow" : "Follow"} */}
                   {follows.some(follow => follow.user_id === user.id) ? "Unfollow" : "Follow"}
-                  {/* {user.auth.follows.is_followed ? "Unfollow" : "Follow"} */}
-                  {/* {auth.follows.is_followed ? "Unfollow" : "Follow"} */}
                 </Button>
               </Box>
             </Box>
           </Box>
-
-          //   <li key={user.id}>
-          //     <p color="white">{user.fullname}</p>
-          //   </li>
         ))}
       </>
     </Box>

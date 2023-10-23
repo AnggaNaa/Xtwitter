@@ -11,5 +11,5 @@ export interface IAUTH {
   password?: string;
   threads?: ThreadCard;
   profile_background?: string;
-  follows: IFollow;
+  follows?: IFollow;
 }

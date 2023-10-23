@@ -9,7 +9,6 @@ import {
   differenceInMinutes,
   parseISO,
 } from "date-fns";
-import { IFollow } from "@/interface/follow";
 import { IAUTH } from "@/interface/auth";
 
 export interface User {
@@ -18,8 +17,10 @@ export interface User {
   full_name?: string;
   email?: string;
   profile_picture?: string;
+  profile_background?: string;
   profile_description?: string | null;
   password?: string;
+  // follows: IFollow[];
   auth: IAUTH;
   // follow: IFollow;
   // threads?: ThreadCard;
@@ -72,11 +73,14 @@ export function ThreadCard(props: ThreadCard) {
   //   }
   //   setIsLike(!isLiked);
   // };
+
   return (
     <>
       <Box>
         <Box border={"1px"} borderColor={"grey"} display="flex" pr={6} pt={5}>
-          <Avatar name="a" mx={2} src={props.user?.profile_picture} />
+          <Link to={`/profile/${props.user?.id}`}>
+            <Avatar mx={2} src={props.user?.profile_picture ?? "https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1697414400&semt=ais"} />
+          </Link>
           <Box gap={2}>
             <Box display="flex" gap={2} mb={1} alignContent={"center"}>
               <Text as="b">{props.user?.full_name}</Text>
