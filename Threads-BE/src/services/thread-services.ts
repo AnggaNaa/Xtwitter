@@ -66,6 +66,52 @@ class ThreadServices {
       throw new Error("error findOne threads");
     }
   }
+  async create(req: Request, res: Response) {
+    try {
+      const data = req.body;
+      const loginSession = res.locals.loginSession;
+      const filename = res.locals.filename;
+      // console.log("ini data :", data);
+      // console.log("ini login:", loginSession);
+      // console.log("ini filename :", filename);
+
+      const { error } = threadSChema.validate(data);
+      if (error) {
+        return res.status(400).json({
+          error: error,
+        });
+      }
+
+      cloudinaryConfig();
+
+      if (filename) {
+        const cloudinaryResponse = await cloudinary.uploader.upload(
+          "./uploads/" + filename
+        );
+        console.log("ini cloudinary : ", cloudinaryResponse);
+
+        const thread = this.threadRepository.create({
+          content: data.content,
+          user: loginSession.user.id,
+          image: cloudinaryResponse.secure_url,
+        });
+
+        const createThread = this.threadRepository.save(thread);
+        return res.status(200).json(createThread);
+      } else {
+        const thread = this.threadRepository.create({
+          content: data.content,
+          user: loginSession.user.id,
+        });
+
+        const createThread = this.threadRepository.save(thread);
+        return res.status(200).json(createThread);
+      }
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: "Error while create threads" });
+    }
+  }
 }
 
 export default new ThreadServices();
