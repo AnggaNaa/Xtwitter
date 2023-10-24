@@ -1,8 +1,7 @@
-import { IFollow } from "@/interface/follow";
 import { API } from "@/lib/api";
 import { GET_FOLLOWS, SET_FOLLOW } from "@/stores/rootReducer";
 import { RootState } from "@/stores/types/rootState";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 

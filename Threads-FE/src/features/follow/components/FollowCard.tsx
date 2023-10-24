@@ -1,7 +1,4 @@
-import { API } from "@/lib/api";
-import { SET_FOLLOW } from "@/stores/rootReducer";
 import { Box, Button, Image, Text } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
 import { IFollow } from "@/interface/follow";
 import useFollowHandler from "@/features/hooks/useFollow";
 

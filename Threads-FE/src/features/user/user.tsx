@@ -2,7 +2,7 @@ import { ChatIcon } from "@chakra-ui/icons";
 import { Avatar, Icon, Button, Box, Text, Image } from "@chakra-ui/react";
 import { AiFillCheckCircle, AiFillLike } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { ThreadCard, User } from "../thread";
+import { ThreadCard } from "../thread";
 
 export function UserThread(props: ThreadCard) {
   return (

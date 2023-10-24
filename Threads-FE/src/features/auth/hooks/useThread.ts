@@ -1,4 +1,3 @@
-import { ThreadCard } from "@/features/thread";
 import { API } from "@/lib/api";
 import { SET_THREAD_LIKE } from "@/stores/rootReducer";
 import { RootState } from "@/stores/types/rootState";

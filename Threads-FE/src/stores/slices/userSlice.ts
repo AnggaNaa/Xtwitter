@@ -1,4 +1,3 @@
-import { User } from "@/features/thread";
 import { IAUTH } from "@/interface/auth";
 import { createSlice } from "@reduxjs/toolkit";
 

@@ -1,5 +1,3 @@
-import { User } from "@/features/thread";
-
 export interface IFollow {
   id: number;
   user_id: number;

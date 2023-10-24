@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Button,
   Flex,
@@ -41,8 +39,8 @@ export default function UserProfileEdit() {
     username: auth.username,
     full_name: auth.full_name,
     profile_description: auth.profile_description,
-    profile_background: auth.profile_background,
-    profile_picture: auth.profile_picture,
+    profile_background: auth.profile_background || "",
+    profile_picture: auth.profile_picture || "",
   });
 
   const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -177,6 +175,7 @@ export default function UserProfileEdit() {
 
               <Box display={"flex"} flexDirection={"column"}>
                 <Image
+                  // src={typeof form.profile_background === "string" ? form.profile_background : URL.createObjectURL(form.profile_background as File)}
                   src={typeof form.profile_background === "string" ? form.profile_background : URL.createObjectURL(form.profile_background as File)}
                   height={"13em"}
                   alt="Green double couch with wooden legs"

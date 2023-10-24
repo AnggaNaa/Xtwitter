@@ -9,7 +9,6 @@ import {
   Button,
   Card,
   CardBody,
-  CardFooter,
   Heading,
   Icon,
   Stack,
@@ -41,15 +40,15 @@ import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 
 
-type IFollower = {
-  id: number;
-  username: string;
-}
+// type IFollower = {
+//   id: number;
+//   username: string;
+// }
 
-type IFollowing = {
-  id: number;
-  username: string;
-}
+// type IFollowing = {
+//   id: number;
+//   username: string;
+// }
 
 export default function UserProfile() {
   const auth = useSelector((state: RootState) => state.auth);

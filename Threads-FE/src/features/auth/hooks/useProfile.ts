@@ -1,6 +1,6 @@
 import { User } from "@/features/thread";
-import { API, setAuthToken } from "@/lib/api";
-import { AUTH_CHECK, AUTH_LOGIN } from "@/stores/rootReducer";
+import { API } from "@/lib/api";
+import { AUTH_CHECK } from "@/stores/rootReducer";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";

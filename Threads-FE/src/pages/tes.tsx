@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { API } from "@/lib/api";
 import {
   Box,
@@ -11,12 +10,10 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react";
-import { IAUTH } from "@/interface/auth";
 import { GET_FOLLOWS } from "@/stores/rootReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/stores/types/rootState";
-import { IFollow } from "@/interface/follow";
-import { PhoneIcon, Search2Icon } from "@chakra-ui/icons";
+import { Search2Icon } from "@chakra-ui/icons";
 import useFollowHandler from "@/features/hooks/useFollow";
 import { Link } from "react-router-dom";
 import { User } from "@/features/thread";
@@ -32,7 +29,7 @@ export function SearchUser() {
   const [searchQuery, setSearchQuery] = useState("");
   //   const [users, setUsers] = useState<IAUTH[]>([]);
   const [users, setUsers] = useState<User[]>([]);
-  const [follow, setFollow] = useState<IFollow[]>([]);
+  // const [follow, setFollow] = useState<IFollow[]>([]);
   console.log("users", users)
   const auth = useSelector((state: RootState) => state.auth);
   const follows = useSelector((state: RootState) => state.follow.follows);

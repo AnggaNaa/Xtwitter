@@ -1,6 +1,6 @@
 import { Avatar, Box, Button, Icon, Input, Text } from "@chakra-ui/react";
 import { ImFilePicture } from "react-icons/im";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ChatIcon } from "@chakra-ui/icons";
 
 import {
@@ -10,7 +10,6 @@ import {
 } from "react-icons/ai";
 
 import { useReply } from "@/features/auth/hooks/useReply";
-import { ThreadCard } from "@/features/thread";
 import { RootState } from "@/stores/types/rootState";
 import { useSelector } from "react-redux";
 
