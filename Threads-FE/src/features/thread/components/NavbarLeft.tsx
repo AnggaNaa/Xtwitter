@@ -1,7 +1,7 @@
 import { Text, Box, Button, Icon } from "@chakra-ui/react";
 import { AiFillHome, AiOutlineSearch } from "react-icons/ai";
-import { RiUserFollowFill } from "react-icons/Ri";
-import { CgProfile } from "react-icons/Cg";
+import { RiUserFollowFill } from "react-icons/ri";
+import { CgProfile } from "react-icons/cg";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AUTH_LOGOUT } from "@/stores/rootReducer";
