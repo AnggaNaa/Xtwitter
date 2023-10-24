@@ -1,4 +1,3 @@
-// import { useThreadCard } from "@/features/auth/hooks/useThread";
 import { ThreadCard, User } from "@/features/thread";
 import { IFollow } from "@/interface/follow";
 import { API } from "@/lib/api";
@@ -15,23 +14,7 @@ import {
   Image,
   Text,
 } from "@chakra-ui/react";
-// import { ChatIcon } from "@chakra-ui/icons";
-// import {
-//   Avatar,
-//   Box,
-//   Button,
-//   Card,
-//   CardBody,
-//   CardFooter,
-//   Flex,
-//   Heading,
-//   Icon,
-//   Image,
-//   Stack,
-//   Text,
-//   Textarea,
-//   VStack,
-// } from "@chakra-ui/react";
+
 import { useEffect, useState } from "react";
 import { AiFillCheckCircle } from "react-icons/ai";
 // import { AiFillCheckCircle, AiFillLike } from "react-icons/ai";
@@ -40,21 +23,11 @@ import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 
 
-// type IFollower = {
-//   id: number;
-//   username: string;
-// }
 
-// type IFollowing = {
-//   id: number;
-//   username: string;
-// }
 
 export default function UserProfile() {
   const auth = useSelector((state: RootState) => state.auth);
   const { id } = useParams();
-  // const user = useSelector((state: RootState) => state.user.userThreads);
-  // const followState = useSelector((state: RootState) => state.follow.followState);
   const follows = useSelector((state: RootState) => state.follow.follows);
 
   const followers = follows.filter((follow) => follow.is_followed)
@@ -66,8 +39,6 @@ export default function UserProfile() {
   console.log("followersCount", totalFollowers);
   console.log("followingsCount", totalFollowing);
 
-  // Menghitung jumlah yang diikuti
-  // const followingCount = follows.filter((follow) => follow.followState === "following").length;
 
   const dispatch = useDispatch();
 
@@ -76,7 +47,6 @@ export default function UserProfile() {
   const [follower, setFollowers] = useState<IFollow[]>([]);
   const [followings, setFollowing] = useState<IFollow[]>([]);
 
-  // const { handlerLikeClick } = useThreadCard();
 
   const fetchData = async () => {
     try {
@@ -88,7 +58,6 @@ export default function UserProfile() {
 
 
       const follower = await API.get(`/follows?type=followers&user_id=${id}`);
-      // dispatch(GET_FOLLOWS(follower.data));
       setFollowers(follower.data);
       console.log("ini follower", follower);
 
@@ -96,13 +65,6 @@ export default function UserProfile() {
       dispatch(GET_FOLLOWS(following.data));
       console.log("ini following", following);
       setFollowing(following.data);
-
-      // const followsData = {
-      //   followers: follower.data,
-      //   following: following.data,
-      // };
-
-      // dispatch(GET_FOLLOWS(followsData));
 
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -123,10 +85,7 @@ export default function UserProfile() {
             borderBottom={"1px"}
             borderX={"1px"}
             borderColor={"GrayText"}
-            // width={"44.9em"}
-            // height={"430px"}
             bg={"black"}
-            // bg={"gray.900"}
             color={"whiteAlpha.800"}
           >
             <CardBody>
@@ -151,15 +110,16 @@ export default function UserProfile() {
                   borderRadius={"50%"}
                   border={"4px solid white"}
                 />
-                <Box mt={"-7"}>
-                  <Link to={"/myprofile/" + auth.id}>
-                    <Button float={"right"}>Edit Profile</Button>
-                  </Link>
-                </Box>
+                {auth.id === userProfile?.id ? (
+                  <Box mt={"-7"}>
+                    <Link to={"/myprofile/" + auth.id}>
+                      <Button float={"right"}>Edit Profile</Button>
+                    </Link>
+                  </Box>
+                ) : null}
               </Box>
               <Stack spacing="1">
                 <Heading size="md">
-                  {/* Angga Nur A{" "} */}
                   {userProfile?.full_name}
                   <Icon color={"twitter.500"} as={AiFillCheckCircle}></Icon>
                 </Heading>
@@ -173,8 +133,7 @@ export default function UserProfile() {
                 </Box>
               </Stack>
             </CardBody>
-            {/* <Divider /> */}
-            {/* <CardFooter></CardFooter> */}
+
           </Card>
         </Box>
       </Box>
@@ -183,9 +142,6 @@ export default function UserProfile() {
           user={item.user}
           key={i}
           id={item.id}
-          // author_full_name={item.author_full_name}
-          // author_picture={item.author_picture}
-          // author_username={item.author_username}
           is_liked={item.is_liked}
           content={item.content}
           image={item.image}

@@ -6,7 +6,6 @@ import {
   Heading,
   Input,
   Stack,
-  useColorModeValue,
   Avatar,
   AvatarBadge,
   IconButton,
@@ -126,10 +125,13 @@ export default function UserProfileEdit() {
   };
 
   const clearUserPreview = () => {
-    setUserIconPreview(null);
+    // setUserIconPreview(null);
+    setForm({ ...form, profile_picture: auth.profile_picture });
+
   };
   const clearBackgroundPreview = () => {
-    setBackgroundPreview(null);
+    // setBackgroundPreview(null);
+    setForm({ ...form, profile_background: auth.profile_background });
   };
 
   const combinedIconChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -144,19 +146,14 @@ export default function UserProfileEdit() {
 
   return (
     <>
-      {/* <FormControl > */}
       < Flex
-        // minH={"100vh"}
-        // maxWidth={"50em"}
         align={"center"}
         justify={"center"}
-        bg={useColorModeValue("gray.50", "gray.800")}
+        backgroundColor={"black"}
       >
         <Stack
           spacing={2}
           w={"full"}
-          // maxW={"md"}
-          bg={useColorModeValue("white", "gray.700")}
           rounded={"xl"}
           boxShadow={"lg"}
           px={6}
@@ -210,42 +207,12 @@ export default function UserProfileEdit() {
                 </Avatar>
 
 
-                {/* <Image
-                    src={auth.profile_picture}
-                    height={"100px"}
-                    width={"100px"}
-                    objectFit={"cover"}
-                    mt={-16}
-                    ml={3}
-                    borderRadius={"50%"}
-                    border={"4px solid white"}
-                  /> */}
-                {/* <Box top={-16}>
-                    <Link to={"/myprofile/" + auth.id}>
-                      <Button float={"right"}>Edit Profile</Button>
-                    </Link>
-                  </Box> */}
+
               </Box>
 
             </CardBody>
-            {/* <Divider /> */}
           </Card>
-          {/* <Stack direction={["column", "row"]} spacing={6}> */}
-          {/* <Center>
-                <Avatar size="xl" src={imagePreview || auth.profile_picture}>
-                  <AvatarBadge
-                    as={IconButton}
-                    size="sm"
-                    rounded="full"
-                    top="-10px"
-                    colorScheme="red"
-                    aria-label="remove Image"
-                    icon={<SmallCloseIcon />}
-                    onClick={clearImagePreview}
-                  />
-                </Avatar>
-              </Center> */}
-          {/* <Center w="full"> */}
+
           < form onSubmit={handleSubmit} encType="multipart/form-data">
             <FormControl id="userIcon" >
               <FormLabel textAlign={"center"} bg={"whiteAlpha.200"} w={"full"} py={3} borderRadius={"md"} cursor={"pointer"}> Change Icon </FormLabel>
@@ -255,8 +222,6 @@ export default function UserProfileEdit() {
               <FormLabel textAlign={"center"} bg={"whiteAlpha.200"} w={"full"} py={3} borderRadius={"md"} cursor={"pointer"}> Change Background Icon </FormLabel>
               < Input type="file" w="full" accept="image/*" name="profile_background" onChange={combinedBackgroundChangeHandler} hidden />
             </FormControl>
-            {/* </Center> */}
-            {/* </Stack> */}
             <FormControl id="userName" >
               <FormLabel>User name</FormLabel>
               <Input
@@ -282,7 +247,6 @@ export default function UserProfileEdit() {
             <FormControl id="description" >
               <FormLabel>Profile Description</FormLabel>
               <Input
-                // placeholder={auth.profile_description}
                 name="profile_description"
                 _placeholder={{ color: "gray.500" }}
                 type="text"
@@ -290,7 +254,7 @@ export default function UserProfileEdit() {
                 value={form.profile_description}
               />
             </FormControl>
-            <Stack spacing={6} direction={["column", "row"]}>
+            <Stack spacing={6} mt={2} direction={["column", "row"]}>
               <Link to={"/"}>
                 <Button
                   bg={"red.400"}
@@ -319,7 +283,6 @@ export default function UserProfileEdit() {
           </form>
         </Stack>
       </Flex>
-      {/* </FormControl > */}
     </>
   );
 }
