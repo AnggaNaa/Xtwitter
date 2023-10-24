@@ -10,6 +10,7 @@ import {
   parseISO,
 } from "date-fns";
 import { IAUTH } from "@/interface/auth";
+import { IFollow } from "@/interface/follow";
 
 export interface User {
   id: number;
@@ -20,7 +21,8 @@ export interface User {
   profile_background?: string;
   profile_description?: string | null;
   password?: string;
-  // follows: IFollow[];
+  follows: IFollow;
+  is_followed: boolean;
   auth: IAUTH;
   // follow: IFollow;
   // threads?: ThreadCard;

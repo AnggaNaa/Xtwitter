@@ -1,3 +1,4 @@
+import useFollowHandler from "@/features/hooks/useFollow";
 import { ThreadCard, User } from "@/features/thread";
 import { IFollow } from "@/interface/follow";
 import { API } from "@/lib/api";
@@ -39,6 +40,10 @@ export default function UserProfile() {
   console.log("followersCount", totalFollowers);
   console.log("followingsCount", totalFollowing);
 
+  const { isLoading, handleFollow } = useFollowHandler(
+
+  );
+
 
   const dispatch = useDispatch();
 
@@ -46,6 +51,7 @@ export default function UserProfile() {
   const [userProfile, setUserProfile] = useState<User>();
   const [follower, setFollowers] = useState<IFollow[]>([]);
   const [followings, setFollowing] = useState<IFollow[]>([]);
+  console.log(userProfile?.is_followed, "ini is follow")
 
 
   const fetchData = async () => {
@@ -116,7 +122,13 @@ export default function UserProfile() {
                       <Button float={"right"}>Edit Profile</Button>
                     </Link>
                   </Box>
-                ) : null}
+                ) : <Box mt={"-7"}>
+                  <Button float={"right"} onClick={() => handleFollow(auth.id, userProfile?.id || 0, follows.some(follow => follow.user_id === userProfile?.id))} isLoading={isLoading}>
+                    {/* {userProfile?.is_followed ? "Unfollow" : "Follow"} */}
+                    {follows.some(follow => follow.user_id === userProfile?.id) ? "Unfollow" : "Follow"}
+                  </Button>
+                </Box>}
+
               </Box>
               <Stack spacing="1">
                 <Heading size="md">
@@ -136,20 +148,22 @@ export default function UserProfile() {
 
           </Card>
         </Box>
-      </Box>
-      {threads.map((item, i) => (
-        <ThreadCard
-          user={item.user}
-          key={i}
-          id={item.id}
-          is_liked={item.is_liked}
-          content={item.content}
-          image={item.image}
-          likes_count={item.likes_count}
-          posted_at={item.posted_at}
-          replies_count={item.replies_count}
-        />
-      ))}
+      </Box >
+      {
+        threads.map((item, i) => (
+          <ThreadCard
+            user={item.user}
+            key={i}
+            id={item.id}
+            is_liked={item.is_liked}
+            content={item.content}
+            image={item.image}
+            likes_count={item.likes_count}
+            posted_at={item.posted_at}
+            replies_count={item.replies_count}
+          />
+        ))
+      }
     </>
   );
 }

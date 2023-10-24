@@ -26,6 +26,7 @@ export const authSlice = createSlice({
         profile_description,
         profile_background,
         threads,
+        followed_user_id,
       } = action.payload.user;
 
       const { token } = action.payload;
@@ -41,6 +42,7 @@ export const authSlice = createSlice({
       state.profile_description = profile_description;
       state.profile_background = profile_background;
       state.threads = threads;
+      state.follows = followed_user_id;
       // const payload = action.payload;
       // console.log("redux authLogin :", payload);
       // setAuthToken(payload.token);
